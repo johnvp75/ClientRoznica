@@ -4,6 +4,7 @@
  */
 package com.mycompany.clientroznica;
 
+import java.util.Properties;
 import javax.activation.DataSource;
 import javax.annotation.Resource;
 import org.hibernate.cfg.Environment;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+
 /**
  *
  * @author Евгений
@@ -20,7 +22,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 @ComponentScan
 @EnableJpaRepositories
-
+//@Resource()
 public class AppConfig {
 
     private static final String PROP_DATABASE_DRIVER = "db.driver";
@@ -44,7 +46,7 @@ public class AppConfig {
         dataSource.setUsername(env.getRequiredProperty(PROP_DATABASE_USERNAME));
         dataSource.setPassword(env.getRequiredProperty(PROP_DATABASE_PASSWORD));
  
-        return dataSource;
+        return (DataSource) dataSource;
     }
  
     @Bean

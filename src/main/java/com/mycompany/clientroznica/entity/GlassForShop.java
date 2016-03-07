@@ -14,8 +14,8 @@ import javax.persistence.Table;
  * @author Евгений
  */
 @Entity
-@Table(name="RoznicaBarCode")
-public class RoznicaBarCode {
+@Table(name="GlassForShop")
+public class GlassForShop {
     @Id
     @Column(name="Id")
     private long id ;
@@ -23,8 +23,8 @@ public class RoznicaBarCode {
     @Column(name="name")
     private String name;
     
-    @Column(name="bar_code")
-    private String bar_code;
+    @Column(name="barcode")
+    private String barcode;
     
     @Column(name="cost")
     private double cost;

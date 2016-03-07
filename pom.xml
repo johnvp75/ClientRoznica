@@ -46,5 +46,10 @@
          <artifactId>hibernate-entitymanager</artifactId>
          <version>5.1.0.Final</version>
      </dependency>
+     <dependency>
+         <groupId>org.springframework.data</groupId>
+         <artifactId>spring-data-commons</artifactId>
+         <version>1.11.4.RELEASE</version>
+     </dependency>
   </dependencies>
 </project>

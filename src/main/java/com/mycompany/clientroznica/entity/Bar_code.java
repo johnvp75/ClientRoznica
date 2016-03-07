@@ -23,4 +23,20 @@ public class Bar_code {
     
     @Column(name="bar_code")
     private String bar_code;
+
+    @Column(name = "id_tovar")
+    private int id_tovar;
+    
+    @Column(name = "id_skl")
+    private int id_skl;
+    
+    @Column(name = "count")
+    private int count;
+    
+    @Column(name = "for_shops")
+    private int for_shop;
+    
+    @Column(name = "state")
+    private int state;
+    
 }
