@@ -8,6 +8,7 @@ package com.mycompany.clientroznica.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -20,6 +21,7 @@ public class Tovar {
     
     @Id
     @Column(name = "id_tovar")
+    @OneToMany
     private int id_tovar;
     
     @Column(name="name")

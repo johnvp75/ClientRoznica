@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -22,6 +23,7 @@ public class GroupId {
     
     @Id
     @Column(name="id_group")
+    @OneToMany
     private int id_group;
     
     @Column(name="name")

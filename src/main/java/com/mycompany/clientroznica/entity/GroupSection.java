@@ -8,6 +8,7 @@ package com.mycompany.clientroznica.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -21,6 +22,7 @@ public class GroupSection {
     
     @Id
     @Column(name="id_section")
+    @OneToMany
     private int id_section;
     
     @Column(name="description")

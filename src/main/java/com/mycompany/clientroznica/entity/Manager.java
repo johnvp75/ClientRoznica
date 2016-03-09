@@ -9,6 +9,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -22,9 +25,12 @@ public class Manager {
     
     @Id
     @Column(name="id_manager")
+    @OneToMany
     private int id_manager;
     
     @Column(name="id_rules")
+    @ManyToOne
+    @JoinColumn(table="rules",name = "id_rules")
     private int id_rules;
     
     @Column(name="name")

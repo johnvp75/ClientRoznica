@@ -8,6 +8,9 @@ package com.mycompany.clientroznica.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -21,12 +24,15 @@ public class Type_price {
     
     @Id
     @Column(name="id_price")
+    @OneToMany
     private int id_price;
     
     @Column(name="name")
     private String name;
     
     @Column(name="id_val")
+    @ManyToOne
+    @JoinColumn(table="val",name="id_val")
     private int id_val;
     
     @Column(name="state")

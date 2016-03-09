@@ -18,15 +18,21 @@ import javax.persistence.Table;
 public class GlassForShop {
     @Id
     @Column(name="Id")
-    private long id ;
+    private Integer id ;
     
     @Column(name="name")
     private String name;
+
+    public String getName() {
+        return name;
+    }
     
     @Column(name="barcode")
     private String barcode;
     
     @Column(name="cost")
     private double cost;
+    
+    
     
 }

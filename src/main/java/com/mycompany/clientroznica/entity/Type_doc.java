@@ -8,6 +8,7 @@ package com.mycompany.clientroznica.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
@@ -21,6 +22,7 @@ public class Type_doc {
     
     @Id
     @Column(name="id_type_doc")
+    @OneToMany
     private int id_type_doc;
     
     @Column(name="name")
