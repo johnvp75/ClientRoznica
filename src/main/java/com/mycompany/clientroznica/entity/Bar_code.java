@@ -7,6 +7,8 @@ package com.mycompany.clientroznica.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -25,9 +27,13 @@ public class Bar_code {
     private String bar_code;
 
     @Column(name = "id_tovar")
+    @ManyToOne
+    @JoinColumn(table="tovar",name="id_tovar")
     private int id_tovar;
     
     @Column(name = "id_skl")
+    @ManyToOne
+    @JoinColumn(table="sklad",name="id_skl")
     private int id_skl;
     
     @Column(name = "count")

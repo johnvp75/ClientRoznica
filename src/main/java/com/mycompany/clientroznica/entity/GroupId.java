@@ -8,6 +8,8 @@ package com.mycompany.clientroznica.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -29,6 +31,8 @@ public class GroupId {
     private int parent_group;
     
     @Column(name="id_section")
+    @ManyToOne
+    @JoinColumn(table="groupsection",name="id_section")
     private int id_section;
     
     @Column(name="ban")

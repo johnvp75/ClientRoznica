@@ -5,10 +5,9 @@
  */
 package com.mycompany.clientroznica.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import java.sql.Date;
+import javax.persistence.*;
 
 /**
  *
@@ -24,21 +23,30 @@ public class Kart {
     private int id_nom;
     
     @Column(name="id_tovar")
+    @ManyToOne
+    @JoinColumn(table="tovar",name="id_tovar")
     private int id_tovar;
     
+    
     @Column(name="id_skl")
+    @ManyToOne
+    @JoinColumn(table="sklad",name="id_skl")
     private int id_skl;
     
     @Column(name="id_group")
+    @ManyToOne
+    @JoinColumn(table="groupid",name="id_group")
     private int id_group;
     
     @Column(name="cost")
     private double cost;
     
     @Column(name="day")
-    private date day;
+    private Date day;
     
     @Column(name="val")
+    @ManyToOne
+    @JoinColumn(table="val",name="id_val")
     private int val;
     
     @Column(name="state")
