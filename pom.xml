@@ -15,6 +15,17 @@
             <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>
             <url>file:${project.basedir}/lib</url>
         </repository>
+        <repository> 
+            <id>maven.oracle.com</id> 
+            <name>oracle-maven-repo</name> 
+            <url>https://maven.oracle.com</url> 
+            <layout>default</layout> 
+            <releases> 
+                <enabled>true</enabled> 
+                <updatePolicy>always</updatePolicy> 
+            </releases> 
+        </repository> 
+
     </repositories>
     <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -50,7 +61,7 @@
      <dependency>
          <groupId>org.hibernate</groupId>
          <artifactId>hibernate-entitymanager</artifactId>
-         <version>5.1.0.Final</version>
+         <version>4.3.1.Final</version>
        <type>jar</type>
      </dependency>
      <dependency>
@@ -63,5 +74,28 @@
         <artifactId>spring-test</artifactId>
         <version>4.2.5.RELEASE</version>
     </dependency>
-    </dependencies>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.7.18</version>
+    </dependency>
+    <dependency>
+        <groupId>com.oracle.jdbc</groupId>
+        <artifactId>ojdbc7</artifactId>
+        <version>12.1.0.2</version>
+    </dependency>
+  </dependencies>
+
+<pluginRepositories> 
+    <pluginRepository> 
+        <id>maven.oracle.com</id> 
+        <name>oracle-maven-repo</name> 
+        <url>https://maven.oracle.com</url> 
+        <layout>default</layout> 
+        <releases> 
+            <enabled>true</enabled> 
+            <updatePolicy>always</updatePolicy> 
+        </releases> 
+    </pluginRepository> 
+</pluginRepositories>
 </project>
