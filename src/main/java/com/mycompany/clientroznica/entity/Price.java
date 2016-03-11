@@ -24,20 +24,17 @@ public class Price {
     @Column(name="id")
     private int id;
     
-    @Column(name="id_tovar")
     @ManyToOne
-    @JoinColumn(table="tovar",name="id_tovar")
-    private int id_tovar;
+    @JoinColumn(name="id_tovar")
+    private Tovar tovar;
     
-    @Column(name="id_skl")
     @ManyToOne
-    @JoinColumn(table="sklad",name="id_skl")
-    private int id_skl;
+    @JoinColumn(name="id_skl")
+    private Sklad skl;
     
-    @Column(name="id_price")
     @ManyToOne
-    @JoinColumn(table="type_price",name="id_price")
-    private int id_price;
+    @JoinColumn(name="id_price")
+    private Type_price type_price;
     
     @Column(name="cost")
     private double cost;

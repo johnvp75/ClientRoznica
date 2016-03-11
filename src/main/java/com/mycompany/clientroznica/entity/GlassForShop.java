@@ -30,8 +30,8 @@ public class GlassForShop {
     @Column(name="barcode")
     private String barcode;
     
-    @Column(name="cost")
-    private double cost;
+    @Column(name="price")
+    private double price;
     
     
     

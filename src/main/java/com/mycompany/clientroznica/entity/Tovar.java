@@ -21,7 +21,6 @@ public class Tovar {
     
     @Id
     @Column(name = "id_tovar")
-    @OneToMany
     private int id_tovar;
     
     @Column(name="name")

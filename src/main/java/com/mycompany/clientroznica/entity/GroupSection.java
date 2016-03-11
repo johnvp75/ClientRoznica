@@ -22,7 +22,6 @@ public class GroupSection {
     
     @Id
     @Column(name="id_section")
-    @OneToMany
     private int id_section;
     
     @Column(name="description")

@@ -8,7 +8,7 @@ package com.mycompany.clientroznica.entity;
 
 import java.sql.Date;
 import javax.persistence.*;
-
+import com.mycompany.clientroznica.entity.GroupId;
 /**
  *
  * @author User
@@ -22,21 +22,21 @@ public class Kart {
     @Column(name="id_nom")
     private int id_nom;
     
-    @Column(name="id_tovar")
+
     @ManyToOne
-    @JoinColumn(table="tovar",name="id_tovar")
-    private int id_tovar;
+    @JoinColumn(name="id_tovar")
+    private Tovar tovar;
     
     
-    @Column(name="id_skl")
+
     @ManyToOne
-    @JoinColumn(table="sklad",name="id_skl")
-    private int id_skl;
+    @JoinColumn(name="id_skl")
+    private Sklad skl;
     
-    @Column(name="id_group")
+
     @ManyToOne
-    @JoinColumn(table="groupid",name="id_group")
-    private int id_group;
+    @JoinColumn(name="id_group")
+    private GroupId group;
     
     @Column(name="cost")
     private double cost;
@@ -44,10 +44,10 @@ public class Kart {
     @Column(name="day")
     private Date day;
     
-    @Column(name="val")
+
     @ManyToOne
-    @JoinColumn(table="val",name="id_val")
-    private int val;
+    @JoinColumn(name="id_val")
+    private Val val;
     
     @Column(name="state")
     private int state;

@@ -25,13 +25,11 @@ public class Manager {
     
     @Id
     @Column(name="id_manager")
-    @OneToMany
     private int id_manager;
     
-    @Column(name="id_rules")
     @ManyToOne
-    @JoinColumn(table="rules",name = "id_rules")
-    private int id_rules;
+    @JoinColumn(name = "id_rules")
+    private Rules rules;
     
     @Column(name="name")
     private String name;

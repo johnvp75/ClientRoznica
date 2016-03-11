@@ -5,6 +5,7 @@
  */
 package com.mycompany.clientroznica.entity;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,8 +24,7 @@ public class GroupId {
     
     @Id
     @Column(name="id_group")
-    @OneToMany
-    private int id_group;
+    private Integer id_group;
     
     @Column(name="name")
     private String name;
@@ -32,10 +32,9 @@ public class GroupId {
     @Column(name="parent_group")
     private int parent_group;
     
-    @Column(name="id_section")
     @ManyToOne
-    @JoinColumn(table="groupsection",name="id_section")
-    private int id_section;
+    @JoinColumn(name="id_section")
+    private GroupSection section;
     
     @Column(name="ban")
     private int ban;

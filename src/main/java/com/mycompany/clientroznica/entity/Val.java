@@ -22,7 +22,6 @@ public class Val {
     
     @Id
     @Column(name="id_val")
-    @OneToMany
     private int id_val;
     
     @Column(name="name")

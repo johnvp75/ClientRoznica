@@ -26,15 +26,13 @@ public class Bar_code {
     @Column(name="bar_code")
     private String bar_code;
 
-    @Column(name = "id_tovar")
     @ManyToOne
-    @JoinColumn(table="tovar",name="id_tovar")
-    private int id_tovar;
+    @JoinColumn(name="id_tovar")
+    private Tovar tovar;
     
-    @Column(name = "id_skl")
     @ManyToOne
-    @JoinColumn(table="sklad",name="id_skl")
-    private int id_skl;
+    @JoinColumn(name="id_skl")
+    private Sklad skl;
     
     @Column(name = "count")
     private int count;

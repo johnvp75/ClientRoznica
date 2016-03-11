@@ -24,16 +24,14 @@ public class Sklad {
     
     @Id
     @Column(name="id_skl")
-    @OneToMany
     private int id_skl;
     
     @Column(name="name")
     private String name;
     
-    @Column(name="id_price")
     @ManyToOne
-    @JoinColumn(table="price",name="id_price")
-    private int id_price;
+    @JoinColumn(name="id_price")
+    private Price price;
     
     @Column(name="state")
     private int state;

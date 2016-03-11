@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package repositories;
+package com.mycompany.clientroznica.repositories;
 
 import com.mycompany.clientroznica.entity.GlassForShop;
 import java.io.Serializable;

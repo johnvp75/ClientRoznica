@@ -24,16 +24,14 @@ public class Type_price {
     
     @Id
     @Column(name="id_price")
-    @OneToMany
     private int id_price;
     
     @Column(name="name")
     private String name;
     
-    @Column(name="id_val")
     @ManyToOne
-    @JoinColumn(table="val",name="id_val")
-    private int id_val;
+    @JoinColumn(name="id_val")
+    private Val val;
     
     @Column(name="state")
     private int state;

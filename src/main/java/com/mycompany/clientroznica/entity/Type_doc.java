@@ -22,7 +22,6 @@ public class Type_doc {
     
     @Id
     @Column(name="id_type_doc")
-    @OneToMany
     private int id_type_doc;
     
     @Column(name="name")

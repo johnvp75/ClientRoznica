@@ -24,7 +24,6 @@ public class Rules {
     
     @Id
     @Column(name="id_rules")
-    @OneToMany
     private int id_rules;
     
     @Column(name="name")
