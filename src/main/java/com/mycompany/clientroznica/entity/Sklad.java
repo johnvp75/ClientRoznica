@@ -21,6 +21,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name="sklad")
 public class Sklad {
+
+    public Sklad() {
+    }
+
+    public Sklad(String name, Type_price type_price) {
+        this.name = name;
+        this.type_price = type_price;
+    }
     
     @Id
     @Column(name="id_skl")
@@ -28,11 +36,27 @@ public class Sklad {
     
     @Column(name="name")
     private String name;
+
+    public String getName() {
+        return name;
+    }
     
     @ManyToOne
     @JoinColumn(name="id_price")
-    private Price price;
+    private Type_price type_price;
     
     @Column(name="state")
-    private int state;
+    private Integer state;
+
+    public Type_price getType_price() {
+        return type_price;
+    }
+
+    @Override
+    public String toString(){
+        return getName().trim();
+    }
+    
+    
+    
 }

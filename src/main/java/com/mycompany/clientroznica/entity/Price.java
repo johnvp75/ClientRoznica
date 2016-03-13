@@ -19,6 +19,18 @@ import javax.persistence.Table;
 @Entity
 @Table(name="price")
 public class Price {
+
+    public Price() {
+    }
+
+    public Price(Tovar tovar, Sklad skl, Type_price type_price, double cost, int akciya, int isakcia) {
+        this.tovar = tovar;
+        this.skl = skl;
+        this.type_price = type_price;
+        this.cost = cost;
+        this.akciya = akciya;
+        this.isakcia = isakcia;
+    }
     
     @Id
     @Column(name="id")
@@ -46,6 +58,47 @@ public class Price {
     private int isakcia;
     
     @Column(name="state")
-    private int state;
+    private Integer state;
+
+    public Tovar getTovar() {
+        return tovar;
+    }
+
+    public Sklad getSkl() {
+        return skl;
+    }
+
+    public Type_price getType_price() {
+        return type_price;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public int getAkciya() {
+        return akciya;
+    }
+
+    public int getIsakcia() {
+        return isakcia;
+    }
+
+    public void setType_price(Type_price type_price) {
+        this.type_price = type_price;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public void setAkciya(int akciya) {
+        this.akciya = akciya;
+    }
+
+    public void setIsakcia(int isakcia) {
+        this.isakcia = isakcia;
+    }
+
     
 }

@@ -21,6 +21,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name="rules")
 public class Rules {
+
+    public Rules() {
+    }
+
+    public Rules(String name, int id_doc, Integer state) {
+        this.name = name;
+        this.id_doc = id_doc;
+        this.state = state;
+    }
     
     @Id
     @Column(name="id_rules")
@@ -33,5 +42,23 @@ public class Rules {
     private int id_doc;
     
     @Column(name="state")
-    private int state;
+    private Integer state;
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId_doc() {
+        return id_doc;
+    }
+
+    public void setId_rules(int id_rules) {
+        this.id_rules = id_rules;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
 }

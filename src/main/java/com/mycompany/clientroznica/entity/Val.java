@@ -19,6 +19,13 @@ import javax.persistence.Table;
 @Entity
 @Table(name="val")
 public class Val {
+
+    public Val() {
+    }
+
+    public Val(String name) {
+        this.name = name;
+    }
     
     @Id
     @Column(name="id_val")
@@ -28,7 +35,11 @@ public class Val {
     private String name;
     
     @Column(name="state")
-    private int state;
+    private Integer state;
+
+    public String getName() {
+        return name;
+    }
             
          
     

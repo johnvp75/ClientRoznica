@@ -18,6 +18,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Tovar")
 public class Tovar {
+
+    public Tovar() {
+    }
+
+    public Tovar(String name, int kol) {
+        this.name = name;
+        this.kol = kol;
+    }
     
     @Id
     @Column(name = "id_tovar")
@@ -33,5 +41,25 @@ public class Tovar {
     private  int id_color;
     
     @Column(name="state")
-    private int state;
+    private Integer state;
+
+    public String getName() {
+        return name;
+    }
+
+    public int getKol() {
+        return kol;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setKol(int kol) {
+        this.kol = kol;
+    }
+
+
+
+
 }

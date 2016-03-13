@@ -19,6 +19,14 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @Entity
 @Table(name="type_doc")
 public class Type_doc {
+
+    public Type_doc() {
+    }
+
+    public Type_doc(String name, int operacia) {
+        this.name = name;
+        this.operacia = operacia;
+    }
     
     @Id
     @Column(name="id_type_doc")
@@ -31,5 +39,19 @@ public class Type_doc {
     private int operacia;
     
     @Column(name="state")
-    private int state;
+    private Integer state;
+
+    public int getId_type_doc() {
+        return id_type_doc;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getOperacia() {
+        return operacia;
+    }
+
+
 }

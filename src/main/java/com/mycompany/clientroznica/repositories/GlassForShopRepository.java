@@ -7,9 +7,11 @@ package com.mycompany.clientroznica.repositories;
 
 import com.mycompany.clientroznica.entity.GlassForShop;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 
@@ -19,7 +21,9 @@ import org.springframework.stereotype.Repository;
  * @author User
  */
 
-public interface GlassForShopRepository  extends CrudRepository<GlassForShop, Integer>{
+public interface GlassForShopRepository  extends PagingAndSortingRepository<GlassForShop, Integer>{
+    
+    public List<GlassForShop> findByNameLikeOrderByNameAsc(String likeName);
     
     
 }

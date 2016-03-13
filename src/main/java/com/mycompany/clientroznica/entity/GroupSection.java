@@ -19,6 +19,13 @@ import javax.persistence.Table;
 @Entity
 @Table(name="groupsection")
 public class GroupSection {
+
+    public GroupSection() {
+    }
+
+    public GroupSection(String description) {
+        this.description = description;
+    }
     
     @Id
     @Column(name="id_section")
@@ -28,6 +35,10 @@ public class GroupSection {
     private String description;
     
     @Column(name="state")
-    private int state;
+    private Integer state;
+
+    public String getDescription() {
+        return description;
+    }
     
 }

@@ -4,15 +4,17 @@
  */
 package com.mycompany.clientroznica;
 
+import com.mycompany.clientroznica.visualforms.MainFrame;
 import java.util.Properties;
-
 import javax.annotation.Resource;
+
+
 import javax.sql.DataSource;
-import org.hibernate.ejb.HibernatePersistence;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -86,4 +88,11 @@ public class AppConfig {
  
         return properties;
     }
+    
+    public static void main(String[] args){
+        AnnotationConfigApplicationContext context=new AnnotationConfigApplicationContext(AppConfig.class);
+        context.getBean(MainFrame.class).setVisible(true);
+    } 
+    
+    
 }

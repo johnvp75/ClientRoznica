@@ -2,14 +2,41 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.clientroznica;
+package com.mycompany.clientroznica.visualforms;
+
+import com.mycompany.clientroznica.datamodels.TableData;
+import com.mycompany.clientroznica.entity.GlassForShop;
+import com.mycompany.clientroznica.entity.Sklad;
+import com.mycompany.clientroznica.repositories.GlassForShopRepository;
+import com.mycompany.clientroznica.repositories.SkladRepository;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Евгений
  */
+
+@Component
+
 public class MainFrame extends javax.swing.JFrame {
 
+    @Autowired
+    private SkladRepository skladRepository;
+    
+    @Autowired
+    private GlassForShopRepository glassForShopRepository;
+    
+    @Autowired
+    private SelectFromEditList selectFromEditList;
+    
+    
     /**
      * Creates new form MainFrame
      */
@@ -35,6 +62,11 @@ public class MainFrame extends javax.swing.JFrame {
         newButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         skladLabel.setText("Склад:");
 
@@ -42,6 +74,16 @@ public class MainFrame extends javax.swing.JFrame {
 
         findText.setText("Введите строку для поиска");
         findText.setSelectionStart(0);
+        findText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findTextActionPerformed(evt);
+            }
+        });
+        findText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                findTextKeyPressed(evt);
+            }
+        });
 
         dataTable.setModel(new TableData());
         jScrollPane1.setViewportView(dataTable);
@@ -91,47 +133,40 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        Iterable<Sklad> sklads= new TreeSet<Sklad>();
+        sklads=skladRepository.findAll(new Sort(Sort.Direction.ASC,"name"));
+        
+        skladCombo.removeAllItems();
+        for(Sklad sklad:sklads){
+            skladCombo.addItem(sklad);
+        }
+        
+    }//GEN-LAST:event_formWindowOpened
+
+    private void findTextKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextKeyPressed
+        
+    }//GEN-LAST:event_findTextKeyPressed
+
+    private void findTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextActionPerformed
+        if (findText.getText()!=""){
+            List<GlassForShop> glassForShops=glassForShopRepository.findByNameLikeOrderByNameAsc(findText.getText()+"%");
+            selectFromEditList.editList.setModel(new AbstractListModel(){
+
+                public int getSize() {
+                    return glassForShops.size(); 
+                }
+
+                public Object getElementAt(int index) {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+            });
+        }
+    }//GEN-LAST:event_findTextActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /*
-         * Set the Nimbus look and feel
-         */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /*
-         * If Nimbus (introduced in Java SE 6) is not available, stay with the
-         * default look and feel. For details see
-         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /*
-         * Create and display the form
-         */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable dataTable;
     private javax.swing.JLabel findLabel;

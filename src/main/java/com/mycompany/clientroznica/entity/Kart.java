@@ -17,6 +17,18 @@ import com.mycompany.clientroznica.entity.GroupId;
 @Entity
 @Table(name="kart")
 public class Kart {
+
+    public Kart() {
+    }
+
+    public Kart(Tovar tovar, Sklad skl, GroupId group, double cost, Date day, Val val) {
+        this.tovar = tovar;
+        this.skl = skl;
+        this.group = group;
+        this.cost = cost;
+        this.day = day;
+        this.val = val;
+    }
     
     @Id
     @Column(name="id_nom")
@@ -50,6 +62,38 @@ public class Kart {
     private Val val;
     
     @Column(name="state")
-    private int state;
+    private Integer state;
+
+    public Tovar getTovar() {
+        return tovar;
+    }
+
+    public Sklad getSkl() {
+        return skl;
+    }
+
+    public GroupId getGroup() {
+        return group;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public Val getVal() {
+        return val;
+    }
+
+    public void setSkl(Sklad skl) {
+        this.skl = skl;
+    }
+
+    public void setGroup(GroupId group) {
+        this.group = group;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
     
 }

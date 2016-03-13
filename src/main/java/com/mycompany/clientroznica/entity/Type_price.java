@@ -21,6 +21,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name="type_price")
 public class Type_price {
+
+    public Type_price() {
+    }
+
+    public Type_price(String name, Val val) {
+        this.name = name;
+        this.val = val;
+    }
     
     @Id
     @Column(name="id_price")
@@ -34,5 +42,15 @@ public class Type_price {
     private Val val;
     
     @Column(name="state")
-    private int state;
+    private Integer state;
+
+    public String getName() {
+        return name;
+    }
+
+    public Val getVal() {
+        return val;
+    }
+
+
 }

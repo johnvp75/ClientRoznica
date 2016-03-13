@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.clientroznica;
+package com.mycompany.clientroznica.datamodels;
 
+import com.mycompany.clientroznica.TableRecord;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
