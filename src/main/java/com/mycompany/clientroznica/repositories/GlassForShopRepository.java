@@ -6,13 +6,9 @@
 package com.mycompany.clientroznica.repositories;
 
 import com.mycompany.clientroznica.entity.GlassForShop;
-import java.io.Serializable;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.stereotype.Repository;
+
 
 
 

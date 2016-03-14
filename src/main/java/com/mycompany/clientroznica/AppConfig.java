@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 
 import javax.sql.DataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -35,6 +37,10 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 @EnableJpaRepositories
 @PropertySource("classpath:application.properties")
 public class AppConfig {
+    
+    
+    private static final Logger LOG=LoggerFactory.getLogger(AppConfig.class);
+    
 
     private static final String PROP_DATABASE_DRIVER = "db.driver";
     private static final String PROP_DATABASE_PASSWORD = "db.password";

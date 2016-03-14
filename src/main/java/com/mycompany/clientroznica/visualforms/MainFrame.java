@@ -4,16 +4,24 @@
  */
 package com.mycompany.clientroznica.visualforms;
 
+import com.mycompany.clientroznica.TableRecord;
+import com.mycompany.clientroznica.datamodels.EditListModel;
 import com.mycompany.clientroznica.datamodels.TableData;
 import com.mycompany.clientroznica.entity.GlassForShop;
 import com.mycompany.clientroznica.entity.Sklad;
 import com.mycompany.clientroznica.repositories.GlassForShopRepository;
 import com.mycompany.clientroznica.repositories.SkladRepository;
+import java.awt.Dialog;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Vector;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -36,6 +44,13 @@ public class MainFrame extends javax.swing.JFrame {
     @Autowired
     private SelectFromEditList selectFromEditList;
     
+    @Autowired
+    private EditListModel editListModel;
+    
+    @Autowired
+    private TableData tableData;
+    
+    private List<GlassForShop> itemsForSearch;
     
     /**
      * Creates new form MainFrame
@@ -57,9 +72,9 @@ public class MainFrame extends javax.swing.JFrame {
         skladCombo = new javax.swing.JComboBox();
         findLabel = new javax.swing.JLabel();
         findText = new javax.swing.JTextField();
+        newButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         dataTable = new javax.swing.JTable();
-        newButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -83,12 +98,14 @@ public class MainFrame extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 findTextKeyPressed(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                findTextKeyTyped(evt);
+            }
         });
 
-        dataTable.setModel(new TableData());
-        jScrollPane1.setViewportView(dataTable);
-
         newButton.setText("Добавить");
+
+        jScrollPane1.setViewportView(dataTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -106,11 +123,10 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(skladLabel)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(skladCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42)
-                        .addComponent(newButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(55, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(newButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,8 +142,8 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(newButton)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(135, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -141,6 +157,12 @@ public class MainFrame extends javax.swing.JFrame {
         for(Sklad sklad:sklads){
             skladCombo.addItem(sklad);
         }
+        dataTable.setModel(tableData);
+        dataTable.getColumnModel().getColumn(0).setMinWidth(0);
+        dataTable.getColumnModel().getColumn(0).setPreferredWidth(4);
+        dataTable.getColumnModel().getColumn(1).setPreferredWidth(282);
+        dataTable.getColumnModel().getColumn(3).setPreferredWidth(4);
+        dataTable.getColumnModel().getColumn(4).setPreferredWidth(10);
         
     }//GEN-LAST:event_formWindowOpened
 
@@ -150,20 +172,64 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void findTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextActionPerformed
         if (findText.getText()!=""){
-            List<GlassForShop> glassForShops=glassForShopRepository.findByNameLikeOrderByNameAsc(findText.getText()+"%");
-            selectFromEditList.editList.setModel(new AbstractListModel(){
-
-                public int getSize() {
-                    return glassForShops.size(); 
-                }
-
-                public Object getElementAt(int index) {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-            });
+            ArrayList <GlassForShop> glassForShops=(ArrayList)glassForShopRepository.findByNameLikeOrderByNameAsc(findText.getText()+"%");
+            editListModel.setList((ArrayList)glassForShops);
+            selectFromEditList.editList.setModel(editListModel);
+            selectFromEditList.setModal(true);
+            selectFromEditList.setVisible(true);
+            if (selectFromEditList.getSelectedItem()>-1){
+                GlassForShop item=glassForShops.get(selectFromEditList.getSelectedItem());
+                int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice()));
+                dataTable.repaint();
+                dataTable.editCellAt(row, 3);
+                ((JTextField)dataTable.getEditorComponent()).selectAll();
+                dataTable.grabFocus();
+            }
+            
         }
     }//GEN-LAST:event_findTextActionPerformed
 
+    private void findTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextKeyTyped
+        String findString=findText.getText()+evt.getKeyChar();
+        if(findString.length()==2){
+            itemsForSearch= glassForShopRepository.findByNameLikeOrderByNameAsc(findString+"%");
+        }
+        if(findString.length()>1){
+            JList templateListForChoise=new JList();
+            JScrollPane templateScrollPane=new JScrollPane(templateListForChoise);
+            editListModel.setList((ArrayList)getNameByPrefix(findString));
+            
+            templateListForChoise.setModel(editListModel);
+            
+            templateScrollPane.setBounds(findText.getBounds().x, findText.getBounds().y+findText.getBounds().height,maxLength(itemsForSearch)*5,100);
+            templateListForChoise.setBounds(findText.getBounds().x, findText.getBounds().y+findText.getBounds().height,maxLength(itemsForSearch)*5,100);
+            templateListForChoise.setVisibleRowCount(10);
+            templateScrollPane.setVisible(true);
+            templateListForChoise.setVisible(true);
+            add(templateScrollPane,0);
+//            templateListForChoise.grabFocus();
+            repaint();
+        }
+    }//GEN-LAST:event_findTextKeyTyped
+
+    private List<GlassForShop> getNameByPrefix(String prefix) {
+        List<GlassForShop> result=new ArrayList<GlassForShop>();
+        for(GlassForShop item:itemsForSearch){
+            if(item.getName().startsWith(prefix))
+                result.add(item);
+        }
+        return result;
+    }
+    
+    private int maxLength(List<GlassForShop> items){
+        int result=0;
+        for(GlassForShop item:items){
+            if(item.getName().length()>result)
+                result=item.getName().length();
+        }
+        return result;
+    }
+    
     /**
      * @param args the command line arguments
      */

@@ -8,11 +8,13 @@ import com.mycompany.clientroznica.TableRecord;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Евгений
  */
+@Component
 public class TableData extends AbstractTableModel{
 
     private List<TableRecord> records=new ArrayList<TableRecord>();
@@ -27,15 +29,15 @@ public class TableData extends AbstractTableModel{
     public Object getValueAt(int rowIndex, int columnIndex) {
         TableRecord record=records.get(rowIndex);
         switch (columnIndex){
-            case 1:
+            case 0:
                 return rowIndex+1;
-            case 2:
+            case 1:
                 return record.getName();
-            case 3:
+            case 2:
                 return record.getBar_code();
-            case 4:
+            case 3:
                 return record.getCount();
-            case 5:
+            case 4:
                 return record.getCost();
              
         }
@@ -68,10 +70,24 @@ public class TableData extends AbstractTableModel{
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if(columnIndex==3){
             TableRecord record=records.get(rowIndex);
-            record.setCount((Integer)aValue);
+            record.setCount(new Integer((String)aValue));
             records.set(rowIndex,(record));
         }
     }
     
+    public int add(TableRecord record){
+        records.add(record);
+        fireTableDataChanged();
+        return records.size()-1;
+    }
+    
+    private int getIndexByName(TableRecord record){
+        int index=-1;
+        for(TableRecord item:records){
+            if (item.getName().equals(record.getName()))
+                index=records.indexOf(item);
+        }
+        return index;
+    }
     
 }
