@@ -4,7 +4,6 @@
  */
 package com.mycompany.clientroznica.datamodels;
 
-import com.mycompany.clientroznica.TableRecord;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;

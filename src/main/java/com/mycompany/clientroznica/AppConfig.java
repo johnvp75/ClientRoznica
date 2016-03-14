@@ -5,6 +5,7 @@
 package com.mycompany.clientroznica;
 
 import com.mycompany.clientroznica.visualforms.MainFrame;
+import java.util.Locale;
 import java.util.Properties;
 import javax.annotation.Resource;
 
@@ -56,12 +57,14 @@ public class AppConfig {
     
     @Bean
     public DataSource dataSource() {
+        Locale.setDefault(Locale.ENGLISH);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
  
         dataSource.setDriverClassName(env.getRequiredProperty(PROP_DATABASE_DRIVER));
         dataSource.setUrl(env.getRequiredProperty(PROP_DATABASE_URL));
         dataSource.setUsername(env.getRequiredProperty(PROP_DATABASE_USERNAME));
         dataSource.setPassword(env.getRequiredProperty(PROP_DATABASE_PASSWORD));
+        
  
         return (DataSource) dataSource;
     }

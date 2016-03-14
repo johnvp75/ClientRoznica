@@ -4,7 +4,7 @@
  */
 package com.mycompany.clientroznica.visualforms;
 
-import com.mycompany.clientroznica.TableRecord;
+import com.mycompany.clientroznica.datamodels.TableRecord;
 import com.mycompany.clientroznica.datamodels.EditListModel;
 import com.mycompany.clientroznica.datamodels.TableData;
 import com.mycompany.clientroznica.entity.GlassForShop;
@@ -12,6 +12,10 @@ import com.mycompany.clientroznica.entity.Sklad;
 import com.mycompany.clientroznica.repositories.GlassForShopRepository;
 import com.mycompany.clientroznica.repositories.SkladRepository;
 import java.awt.Dialog;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -51,12 +55,24 @@ public class MainFrame extends javax.swing.JFrame {
     private TableData tableData;
     
     private List<GlassForShop> itemsForSearch;
+    private JList templateListForChoise=new JList();
+    private JScrollPane templateScrollPane=new JScrollPane(templateListForChoise);
     
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        templateListForChoise.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    findText.setText(templateListForChoise.getSelectedValue().toString());
+                    templateListForChoise.setVisible(false);
+                    findText.grabFocus();
+                }
+            }
+        });
+        
     }
 
     /**
@@ -149,6 +165,7 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         Iterable<Sklad> sklads= new TreeSet<Sklad>();
         sklads=skladRepository.findAll(new Sort(Sort.Direction.ASC,"name"));
@@ -167,7 +184,10 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void findTextKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextKeyPressed
-        
+        if (evt.getKeyCode()==KeyEvent.VK_DOWN&&templateListForChoise.isVisible()){
+            templateListForChoise.grabFocus();
+            templateListForChoise.setSelectedIndex(0);
+        }
     }//GEN-LAST:event_findTextKeyPressed
 
     private void findTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextActionPerformed
@@ -195,8 +215,7 @@ public class MainFrame extends javax.swing.JFrame {
             itemsForSearch= glassForShopRepository.findByNameLikeOrderByNameAsc(findString+"%");
         }
         if(findString.length()>1){
-            JList templateListForChoise=new JList();
-            JScrollPane templateScrollPane=new JScrollPane(templateListForChoise);
+
             editListModel.setList((ArrayList)getNameByPrefix(findString));
             
             templateListForChoise.setModel(editListModel);
