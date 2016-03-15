@@ -25,50 +25,50 @@ public class GroupId {
     public GroupId() {
     }
 
-    public GroupId(String name, int parent_group, GroupSection section, int ban) {
+    public GroupId(String name, int parentgroup, GroupSection section, int ban) {
         this.name = name;
-        this.parent_group = parent_group;
+        this.parentgroup = parentgroup;
         this.section = section;
         this.ban = ban;
     }
     
     @Id
     @Column(name="id_group")
-    private Integer id_group;
+    private Integer group;
     
     @Column(name="name")
     private String name;
     
     @Column(name="parent_group")
-    private int parent_group;
+    private int parentgroup;
     
     @ManyToOne
     @JoinColumn(name="id_section")
     private GroupSection section;
     
     @Column(name="ban")
-    private int ban;
+    private Integer ban;
     
     @Column(name="state")
     private Integer state;
 
-    public Integer getId_group() {
-        return id_group;
+    public Integer getGroup() {
+        return group;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getParent_group() {
-        return parent_group;
+    public int getParentgroup() {
+        return parentgroup;
     }
 
     public GroupSection getSection() {
         return section;
     }
 
-    public int getBan() {
+    public Integer getBan() {
         return ban;
     }
 
@@ -76,15 +76,15 @@ public class GroupId {
         this.name = name;
     }
 
-    public void setParent_group(int parent_group) {
-        this.parent_group = parent_group;
+    public void setParentgroup(int parentgroup) {
+        this.parentgroup = parentgroup;
     }
 
     public void setSection(GroupSection section) {
         this.section = section;
     }
 
-    public void setBan(int ban) {
+    public void setBan(Integer ban) {
         this.ban = ban;
     }
     

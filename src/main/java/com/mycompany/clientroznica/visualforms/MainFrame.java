@@ -12,6 +12,8 @@ import com.mycompany.clientroznica.entity.Sklad;
 import com.mycompany.clientroznica.repositories.GlassForShopRepository;
 import com.mycompany.clientroznica.repositories.SkladRepository;
 import java.awt.Dialog;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -63,15 +65,35 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        add(templateScrollPane,0);
         templateListForChoise.addKeyListener(new KeyAdapter() {
-            public void keyTyped(KeyEvent e) {
+            @Override
+            public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode()==KeyEvent.VK_ENTER){
                     findText.setText(templateListForChoise.getSelectedValue().toString());
+                    templateScrollPane.setVisible(false);
                     templateListForChoise.setVisible(false);
                     findText.grabFocus();
                 }
             }
         });
+        templateListForChoise.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e){
+                if(!e.getOppositeComponent().equals(findText)){
+                    templateScrollPane.setVisible(false);
+                    templateListForChoise.setVisible(false);
+                }
+            }
+        });
+        findText.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e){
+                if(!e.getOppositeComponent().equals(templateListForChoise)){
+                    templateScrollPane.setVisible(false);
+                    templateListForChoise.setVisible(false);
+                }
+            }
+        });
+        
         
     }
 
@@ -210,8 +232,9 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_findTextActionPerformed
 
     private void findTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextKeyTyped
+        
         String findString=findText.getText()+evt.getKeyChar();
-        if(findString.length()==2){
+        if((findString.length()==2)||(findString.length()>2&&!templateListForChoise.isVisible())){
             itemsForSearch= glassForShopRepository.findByNameLikeOrderByNameAsc(findString+"%");
         }
         if(findString.length()>1){
@@ -225,7 +248,7 @@ public class MainFrame extends javax.swing.JFrame {
             templateListForChoise.setVisibleRowCount(10);
             templateScrollPane.setVisible(true);
             templateListForChoise.setVisible(true);
-            add(templateScrollPane,0);
+            
 //            templateListForChoise.grabFocus();
             repaint();
         }
@@ -249,6 +272,32 @@ public class MainFrame extends javax.swing.JFrame {
         return result;
     }
     
+    private String generateNewBarcode(String name){
+        int num=1;
+        
+	String SQL=String.format("select max(substr(bar_code,%s,5)) from bar_code where bar_code like '%s%s'", (new Integer(group)).toString().length()+1,group,"%");
+	if (special){
+            SQL=String.format("select max(substr(barcode,%s,5)) from glassforshop where barcode like '%s%s'", (new Integer(group)).toString().length()+1,group,"%");
+	}	
+        ResultSet rs=DataSet.QueryExec1(SQL, false);
+        if (rs.next())
+        num=rs.getInt(1);
+        String code=String.format("%s%05d", group,num+1);
+        String code_sum=String.format("%07d%05d", group,num+1);
+
+        Integer sum=new Integer(0);
+        for (int i=2;i<13;i=i+2)
+            sum=sum+(Integer.valueOf(code_sum.substring(i-1, i)));
+        sum=sum*3;
+        for (int i=1;i<12;i=i+2)
+            sum=sum+(Integer.valueOf(code_sum.substring(i-1, i)));
+        sum=10-((Double)((((sum.doubleValue()/10)-sum/10)*10)+0.1)).intValue();
+        code=code+sum.toString().substring(sum.toString().length()-1);
+        return code;
+
+        return null;
+        }
+            
     /**
      * @param args the command line arguments
      */
