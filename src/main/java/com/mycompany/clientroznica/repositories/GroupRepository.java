@@ -15,4 +15,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface GroupRepository extends PagingAndSortingRepository<GroupId,Integer> {
     
     public Iterable<GroupId> findByNameLikeAndParentgroup(String likeName,int parentgroup);
+    
+    public GroupId getByNameLikeAndParentgroup(String likeName,int parentgroup);
+    
 }

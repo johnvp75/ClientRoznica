@@ -37,12 +37,17 @@ public class GroupRepositoryTest {
     public void testFindByNameLikeAndParent_group() {
         LOG.info("findByNameLikeAndParent_group");
         String likeName = "%Браслет%";
-        int parent_group = 1310000;
-        Iterable<GroupId> groups=groupRepository.findByNameLikeAndParentgroup(likeName, parent_group);
+        int parent_group = 13000;
+ /*       Iterable<GroupId> groups=groupRepository.findByNameLikeAndParentgroup(likeName, parent_group);
         for (GroupId group:groups){
             LOG.info(group.getName());
+        }*/
+        try{
+            GroupId group=groupRepository.getByNameLikeAndParentgroup(likeName, parent_group);
+            LOG.info(group.getName());
+        }catch(NullPointerException ex){
+            LOG.info("null");
         }
-        
     }
 
 

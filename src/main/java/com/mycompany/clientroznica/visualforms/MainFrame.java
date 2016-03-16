@@ -8,8 +8,10 @@ import com.mycompany.clientroznica.datamodels.TableRecord;
 import com.mycompany.clientroznica.datamodels.EditListModel;
 import com.mycompany.clientroznica.datamodels.TableData;
 import com.mycompany.clientroznica.entity.GlassForShop;
+import com.mycompany.clientroznica.entity.GroupId;
 import com.mycompany.clientroznica.entity.Sklad;
 import com.mycompany.clientroznica.repositories.GlassForShopRepository;
+import com.mycompany.clientroznica.repositories.GroupRepository;
 import com.mycompany.clientroznica.repositories.SkladRepository;
 import java.awt.Dialog;
 import java.awt.event.FocusAdapter;
@@ -46,6 +48,9 @@ public class MainFrame extends javax.swing.JFrame {
     
     @Autowired
     private GlassForShopRepository glassForShopRepository;
+    
+    @Autowired
+    private GroupRepository groupRepository;
     
     @Autowired
     private SelectFromEditList selectFromEditList;
@@ -274,7 +279,14 @@ public class MainFrame extends javax.swing.JFrame {
     
     private String generateNewBarcode(String name){
         int num=1;
-        
+        String suffix=name.substring(name.indexOf(" ")+1);
+        try{
+            GroupId group=groupRepository.getByNameLikeAndParentgroup("%"+suffix+"%", );
+            LOG.info(group.getName());
+        }catch(NullPointerException ex){
+            LOG.info("null");
+        }
+/*        
 	String SQL=String.format("select max(substr(bar_code,%s,5)) from bar_code where bar_code like '%s%s'", (new Integer(group)).toString().length()+1,group,"%");
 	if (special){
             SQL=String.format("select max(substr(barcode,%s,5)) from glassforshop where barcode like '%s%s'", (new Integer(group)).toString().length()+1,group,"%");
@@ -294,7 +306,7 @@ public class MainFrame extends javax.swing.JFrame {
         sum=10-((Double)((((sum.doubleValue()/10)-sum/10)*10)+0.1)).intValue();
         code=code+sum.toString().substring(sum.toString().length()-1);
         return code;
-
+*/
         return null;
         }
             
