@@ -294,7 +294,7 @@ public class MainFrame extends javax.swing.JFrame {
         return result;
     }
     
-    private String generateNewBarcode(String name, int group){
+    private String generateNewBarcode(String name, Integer group){
         int num=getMainPartOfMaxPresentBarCodeForGroup(group);
         String code=String.format("%s%05d", group,num+1);
         code=code+getCheckSumForBarcode(String.format("%07d%05d", group,num+1));
@@ -303,13 +303,15 @@ public class MainFrame extends javax.swing.JFrame {
     
     private GroupId getIdGroup(String name){
         String suffix=name.substring(name.indexOf(" ")+1);
-        GroupId group=new GroupId(2203000);
-        try{
-            GroupId id=groupRepository.getByNameLikeAndParentgroup(suffix, 1310000);
-            group=id;
+        GroupId group;
+        GroupId id=groupRepository.getByNameSuffixAndParentgroup("%"+suffix, 1310000);
+        group=id;
+        if (group!=null){
             setBijuterija(true);
-        }catch(NullPointerException ex){
-            setBijuterija(true);
+        }else{
+            group=new GroupId(2203000);
+        
+            setBijuterija(false);
             if (name.indexOf("Очки с/з")>-1)
                 group.setGroup(60000);
             if (name.indexOf("Шляпа")>-1)
@@ -323,7 +325,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             List <GlassForShop> barcodes=glassForShopRepository.findByBarcodeLikeOrderByBarcodeDesc(group+"%");
             num=new Integer(barcodes.get(0).getBarcode().substring(group.toString().length(),group.toString().length()+5));
-        }catch(NullPointerException ex){
+        }catch(IndexOutOfBoundsException ex){
             ex.printStackTrace();
         }
         return num;    

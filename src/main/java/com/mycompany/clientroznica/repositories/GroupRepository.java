@@ -6,7 +6,9 @@
 package com.mycompany.clientroznica.repositories;
 
 import com.mycompany.clientroznica.entity.GroupId;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -16,5 +18,7 @@ public interface GroupRepository extends PagingAndSortingRepository<GroupId,Inte
     
     public Iterable<GroupId> findByNameLikeAndParentgroup(String likeName,int parentgroup);
     
-    public GroupId getByNameLikeAndParentgroup(String likeName,int parentgroup);
+    @Query("SELECT g FROM GroupId g WHERE TRIM(g.name) like :suffix AND g.parentgroup = :parentgroup")
+    public GroupId getByNameSuffixAndParentgroup(@Param("suffix")String suffix,@Param("parentgroup") int parentgroup);
+    
 }
