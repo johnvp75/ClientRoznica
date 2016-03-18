@@ -7,21 +7,39 @@ package com.mycompany.clientroznica.visualforms;
 import com.mycompany.clientroznica.datamodels.TableRecord;
 import com.mycompany.clientroznica.datamodels.EditListModel;
 import com.mycompany.clientroznica.datamodels.TableData;
+import com.mycompany.clientroznica.entity.Bar_code;
 import com.mycompany.clientroznica.entity.GlassForShop;
 import com.mycompany.clientroznica.entity.GroupId;
+import com.mycompany.clientroznica.entity.Kart;
+import com.mycompany.clientroznica.entity.Price;
 import com.mycompany.clientroznica.entity.Sklad;
+import com.mycompany.clientroznica.entity.Tovar;
+import com.mycompany.clientroznica.entity.Type_price;
+import com.mycompany.clientroznica.entity.Val;
+import com.mycompany.clientroznica.repositories.Bar_codeRepository;
 import com.mycompany.clientroznica.repositories.GlassForShopRepository;
 import com.mycompany.clientroznica.repositories.GroupRepository;
+import com.mycompany.clientroznica.repositories.KartRepository;
+import com.mycompany.clientroznica.repositories.PriceRepository;
 import com.mycompany.clientroznica.repositories.SkladRepository;
+import com.mycompany.clientroznica.repositories.TovarRepository;
+import com.mycompany.clientroznica.repositories.Type_priceRepository;
+import com.mycompany.clientroznica.repositories.ValRepository;
 import java.awt.Dialog;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.sql.Date;
+import java.util.AbstractList;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -44,13 +62,23 @@ import org.springframework.stereotype.Component;
 public class MainFrame extends javax.swing.JFrame {
 
     @Autowired
+    private ValRepository valRepository;
+    @Autowired
+    private Type_priceRepository type_priceRepository;
+    @Autowired
+    private TovarRepository tovarRepository;
+    @Autowired
+    private KartRepository kartRepository;
+    @Autowired
+    private Bar_codeRepository bar_codeRepository;
+    @Autowired
     private SkladRepository skladRepository;
-    
     @Autowired
     private GlassForShopRepository glassForShopRepository;
-    
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private PriceRepository priceRepository;
     
     @Autowired
     private SelectFromEditList selectFromEditList;
@@ -64,6 +92,15 @@ public class MainFrame extends javax.swing.JFrame {
     private List<GlassForShop> itemsForSearch;
     private JList templateListForChoise=new JList();
     private JScrollPane templateScrollPane=new JScrollPane(templateListForChoise);
+    private boolean bijuterija=false;
+
+    public boolean isBijuterija() {
+        return bijuterija;
+    }
+
+    public void setBijuterija(boolean bijuterija) {
+        this.bijuterija = bijuterija;
+    }
     
     /**
      * Creates new form MainFrame
@@ -111,8 +148,6 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        skladLabel = new javax.swing.JLabel();
-        skladCombo = new javax.swing.JComboBox();
         findLabel = new javax.swing.JLabel();
         findText = new javax.swing.JTextField();
         newButton = new javax.swing.JButton();
@@ -125,8 +160,6 @@ public class MainFrame extends javax.swing.JFrame {
                 formWindowOpened(evt);
             }
         });
-
-        skladLabel.setText("Склад:");
 
         findLabel.setText("Найти:");
 
@@ -157,15 +190,10 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(findLabel)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(findText))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(skladLabel)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(skladCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(findLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(findText, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -174,11 +202,7 @@ public class MainFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(skladLabel)
-                    .addComponent(skladCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(63, 63, 63)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(findLabel)
                     .addComponent(findText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -194,13 +218,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        Iterable<Sklad> sklads= new TreeSet<Sklad>();
-        sklads=skladRepository.findAll(new Sort(Sort.Direction.ASC,"name"));
-        
-        skladCombo.removeAllItems();
-        for(Sklad sklad:sklads){
-            skladCombo.addItem(sklad);
-        }
         dataTable.setModel(tableData);
         dataTable.getColumnModel().getColumn(0).setMinWidth(0);
         dataTable.getColumnModel().getColumn(0).setPreferredWidth(4);
@@ -277,38 +294,102 @@ public class MainFrame extends javax.swing.JFrame {
         return result;
     }
     
-    private String generateNewBarcode(String name){
-        int num=1;
-        String suffix=name.substring(name.indexOf(" ")+1);
-        try{
-            GroupId group=groupRepository.getByNameLikeAndParentgroup("%"+suffix+"%", );
-            LOG.info(group.getName());
-        }catch(NullPointerException ex){
-            LOG.info("null");
-        }
-/*        
-	String SQL=String.format("select max(substr(bar_code,%s,5)) from bar_code where bar_code like '%s%s'", (new Integer(group)).toString().length()+1,group,"%");
-	if (special){
-            SQL=String.format("select max(substr(barcode,%s,5)) from glassforshop where barcode like '%s%s'", (new Integer(group)).toString().length()+1,group,"%");
-	}	
-        ResultSet rs=DataSet.QueryExec1(SQL, false);
-        if (rs.next())
-        num=rs.getInt(1);
+    private String generateNewBarcode(String name, int group){
+        int num=getMainPartOfMaxPresentBarCodeForGroup(group);
         String code=String.format("%s%05d", group,num+1);
-        String code_sum=String.format("%07d%05d", group,num+1);
-
+        code=code+getCheckSumForBarcode(String.format("%07d%05d", group,num+1));
+        return code;
+        }
+    
+    private GroupId getIdGroup(String name){
+        String suffix=name.substring(name.indexOf(" ")+1);
+        GroupId group=new GroupId(2203000);
+        try{
+            GroupId id=groupRepository.getByNameLikeAndParentgroup(suffix, 1310000);
+            group=id;
+            setBijuterija(true);
+        }catch(NullPointerException ex){
+            setBijuterija(true);
+            if (name.indexOf("Очки с/з")>-1)
+                group.setGroup(60000);
+            if (name.indexOf("Шляпа")>-1)
+                group.setGroup(1392306);
+        }
+        return group;
+    }
+    
+    private int getMainPartOfMaxPresentBarCodeForGroup(Integer group){
+        int num=1;
+        try {
+            List <GlassForShop> barcodes=glassForShopRepository.findByBarcodeLikeOrderByBarcodeDesc(group+"%");
+            num=new Integer(barcodes.get(0).getBarcode().substring(group.toString().length(),group.toString().length()+5));
+        }catch(NullPointerException ex){
+            ex.printStackTrace();
+        }
+        return num;    
+        
+    }
+    
+    private String getCheckSumForBarcode(String barcode){
         Integer sum=new Integer(0);
         for (int i=2;i<13;i=i+2)
-            sum=sum+(Integer.valueOf(code_sum.substring(i-1, i)));
+            sum=sum+(Integer.valueOf(barcode.substring(i-1, i)));
         sum=sum*3;
         for (int i=1;i<12;i=i+2)
-            sum=sum+(Integer.valueOf(code_sum.substring(i-1, i)));
+            sum=sum+(Integer.valueOf(barcode.substring(i-1, i)));
         sum=10-((Double)((((sum.doubleValue()/10)-sum/10)*10)+0.1)).intValue();
-        code=code+sum.toString().substring(sum.toString().length()-1);
-        return code;
-*/
-        return null;
+        return sum.toString().substring(sum.toString().length()-1);
+
+    }
+    
+    private Integer getCostFromName(String name){
+        return new Integer(name.substring(0, name.indexOf(" ")));
+    }
+    
+    private String generateArticle(int cost,GroupId group){
+        return "0"+group.getName().substring(0, group.getName().indexOf(" ")).trim()+cost;
+    }
+    
+    private Sklad getSklad(String name){
+        if (isBijuterija())
+            return skladRepository.findOne(8);
+        if (name.indexOf("Очки с/з")>-1)
+            return skladRepository.findOne(2);
+        if (name.indexOf("Шляпа")>-1)
+            return skladRepository.findOne(3);
+        return skladRepository.findOne(99);
+    }
+    
+    private void addNewPosition(String name){
+        GroupId group=getIdGroup(name);
+        String barcode=generateNewBarcode(name, group.getGroup());
+        Sklad sklad =getSklad(name);
+        Double cost=getCostFromName(name).doubleValue();
+        GlassForShop itemGlassForShop=new GlassForShop(name, barcode, cost, sklad);
+        glassForShopRepository.save(itemGlassForShop);
+        int row=((TableData)dataTable.getModel()).add(new TableRecord(itemGlassForShop.getName(),itemGlassForShop.getBarcode(), 1, itemGlassForShop.getPrice()));
+        dataTable.repaint();
+        dataTable.editCellAt(row, 3);
+        ((JTextField)dataTable.getEditorComponent()).selectAll();
+        if (sklad.getId_skl()==8){
+            Tovar tovar =new Tovar(name, 1);
+            tovarRepository.save(tovar);
+            Val val=valRepository.findOne(4);
+            Kart kart = new Kart(tovar, sklad, group, cost, (Date) (new GregorianCalendar()).getTime(), val);
+            kartRepository.save(kart);
+            List <Bar_code> barcodes=new ArrayList<Bar_code>(); 
+            barcodes.add(new Bar_code(barcode, tovar, sklad, 1, 1));
+            barcodes.add(new Bar_code(generateArticle(cost.intValue(), group), tovar, sklad, 1, 0));
+            bar_codeRepository.save(barcodes);
+            Price price = new Price(tovar, sklad, type_priceRepository.findOne(5), cost, 0, 0);
+            priceRepository.save(price);
         }
+        
+        
+        
+        dataTable.grabFocus();
+
+    }
             
     /**
      * @param args the command line arguments
@@ -319,7 +400,5 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField findText;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton newButton;
-    private javax.swing.JComboBox skladCombo;
-    private javax.swing.JLabel skladLabel;
     // End of variables declaration//GEN-END:variables
 }

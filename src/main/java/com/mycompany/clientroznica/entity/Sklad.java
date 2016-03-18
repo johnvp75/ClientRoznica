@@ -52,6 +52,10 @@ public class Sklad {
         return type_price;
     }
 
+    public int getId_skl() {
+        return id_skl;
+    }
+
     @Override
     public String toString(){
         return getName().trim();

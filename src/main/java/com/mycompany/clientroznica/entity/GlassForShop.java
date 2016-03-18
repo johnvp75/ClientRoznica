@@ -7,6 +7,8 @@ package com.mycompany.clientroznica.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -20,10 +22,11 @@ public class GlassForShop {
     public GlassForShop() {
     }
 
-    public GlassForShop(String name, String barcode, double price) {
+    public GlassForShop(String name, String barcode, double price, Sklad sklad) {
         this.name = name;
         this.barcode = barcode;
         this.price = price;
+        this.sklad=sklad;
     }
     @Id
     @Column(name="Id")
@@ -37,6 +40,18 @@ public class GlassForShop {
     
     @Column(name="price")
     private double price;
+    
+    @ManyToOne
+    @JoinColumn(name="id_skl")
+    private Sklad sklad;
+
+    public Sklad getSklad() {
+        return sklad;
+    }
+
+    public void setSklad(Sklad sklad) {
+        this.sklad = sklad;
+    }
 
     public String getName() {
         return name;

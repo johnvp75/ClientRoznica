@@ -31,6 +31,10 @@ public class GroupId {
         this.section = section;
         this.ban = ban;
     }
+
+    public GroupId(Integer group) {
+        this.group = group;
+    }
     
     @Id
     @Column(name="id_group")
@@ -86,6 +90,10 @@ public class GroupId {
 
     public void setBan(Integer ban) {
         this.ban = ban;
+    }
+
+    public void setGroup(Integer group) {
+        this.group = group;
     }
     
     

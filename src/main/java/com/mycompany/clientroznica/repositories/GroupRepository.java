@@ -17,5 +17,4 @@ public interface GroupRepository extends PagingAndSortingRepository<GroupId,Inte
     public Iterable<GroupId> findByNameLikeAndParentgroup(String likeName,int parentgroup);
     
     public GroupId getByNameLikeAndParentgroup(String likeName,int parentgroup);
-    
 }

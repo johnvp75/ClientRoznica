@@ -57,7 +57,7 @@ public class RepositoriesTest {
    }
    
 
-   @Test
+/*   @Test
    public void testFindAllSklad() {
        LOG.info("*********All Sklad**********");
        Iterable<Sklad> allSklads;
@@ -67,15 +67,17 @@ public class RepositoriesTest {
            LOG.info(sklad.getName());
        }
    }
-
+*/
    @Test
    public void testFindNameLike() {
-       LOG.info("*********name from glassforshop like 10**********");
-       Iterable<GlassForShop> elements;
-        elements = glassForShopRepository.findByNameLikeOrderByNameAsc("10%");
+       LOG.info("*********Barcodes from glassforshop like 2203000**********");
+       List<GlassForShop> elements;
+       Integer group=2203000; 
+       elements = glassForShopRepository.findByBarcodeLikeOrderByBarcodeDesc(group+"%");
+        int num=new Integer(elements.get(0).getBarcode().substring(group.toString().length(),group.toString().length()+5));
        
        for (GlassForShop element:elements){
-           LOG.info(element.getName());
+           LOG.info(element.getName()+" barcodes "+element.getBarcode()+": "+num);
        }
    }
    

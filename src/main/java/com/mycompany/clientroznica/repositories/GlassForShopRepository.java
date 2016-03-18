@@ -7,6 +7,7 @@ package com.mycompany.clientroznica.repositories;
 
 import com.mycompany.clientroznica.entity.GlassForShop;
 import java.util.List;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 
@@ -17,9 +18,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * @author User
  */
 
-public interface GlassForShopRepository  extends PagingAndSortingRepository<GlassForShop, Integer>{
+public interface GlassForShopRepository  extends CrudRepository<GlassForShop, Integer>{
     
     public List<GlassForShop> findByNameLikeOrderByNameAsc(String likeName);
+    
+    public List<GlassForShop> findByBarcodeLikeOrderByBarcodeDesc(String likeBarcode);
     
     
 }
