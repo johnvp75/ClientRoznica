@@ -250,8 +250,9 @@ public class MainFrame extends javax.swing.JFrame {
                     return;
                 }
                 if (glassForShops.size()>1){
-                    editListModel.setList(glassForShops);
-                    selectFromEditList.editList.setModel(editListModel);
+                    ((EditListModel)selectFromEditList.editList.getModel()).setList(glassForShops);
+//                    editListModel.setList(glassForShops);
+//                    selectFromEditList.editList.setModel(editListModel);
 //                    selectFromEditList.editList.repaint();
                     selectFromEditList.setModal(true);
                     selectFromEditList.setVisible(true);
@@ -281,6 +282,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
         if(findString.length()>1){
 
+//            ((EditListModel)(templateListForChoise.getModel())).setList((ArrayList)getNameByPrefix(findString));
             editListModelForTemplate.setList((ArrayList)getNameByPrefix(findString));
             
             templateListForChoise.setModel(editListModelForTemplate);

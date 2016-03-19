@@ -5,6 +5,7 @@
  */
 package com.mycompany.clientroznica.visualforms;
 
+import com.mycompany.clientroznica.datamodels.EditListModel;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,6 +49,7 @@ public class SelectFromEditList extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
+        editList.setModel(new EditListModel());
         editList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 editListMouseClicked(evt);

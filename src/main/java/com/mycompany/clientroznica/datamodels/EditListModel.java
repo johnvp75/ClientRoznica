@@ -22,15 +22,15 @@ import org.springframework.stereotype.Component;
 public class EditListModel extends AbstractListModel{
 
     final static private Logger LOG=LoggerFactory.getLogger(AppConfig.class);
-    private ArrayList list;
+    private ArrayList list=new ArrayList();;
 
     public EditListModel() {
     }
 
     public void setList(ArrayList list) {
-        this.list=new ArrayList();
         this.list.clear();
         this.list = list;
+        fireContentsChanged(this, 0, list.size()-1);
     }
     
     
@@ -39,7 +39,7 @@ public class EditListModel extends AbstractListModel{
     }
 
     public Object getElementAt(int index) {
-        LOG.info(list.get(index).toString());
+//        LOG.info(list.get(index).toString());
         return list.get(index).toString();
     }
     
