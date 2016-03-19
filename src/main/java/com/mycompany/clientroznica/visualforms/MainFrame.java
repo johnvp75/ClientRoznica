@@ -85,7 +85,10 @@ public class MainFrame extends javax.swing.JFrame {
     
     @Autowired
     private EditListModel editListModel;
-    
+
+    @Autowired
+    private EditListModel editListModelForTemplate;
+
     @Autowired
     private TableData tableData;
     
@@ -232,25 +235,42 @@ public class MainFrame extends javax.swing.JFrame {
             templateListForChoise.grabFocus();
             templateListForChoise.setSelectedIndex(0);
         }
-    }//GEN-LAST:event_findTextKeyPressed
-
-    private void findTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextActionPerformed
-        if (findText.getText()!=""){
-            ArrayList <GlassForShop> glassForShops=(ArrayList)glassForShopRepository.findByNameLikeOrderByNameAsc(findText.getText()+"%");
-            editListModel.setList((ArrayList)glassForShops);
-            selectFromEditList.editList.setModel(editListModel);
-            selectFromEditList.setModal(true);
-            selectFromEditList.setVisible(true);
-            if (selectFromEditList.getSelectedItem()>-1){
-                GlassForShop item=glassForShops.get(selectFromEditList.getSelectedItem());
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            if (findText.getText()!=""){
+                GlassForShop item=new GlassForShop();
+                templateListForChoise.setVisible(false);
+                templateScrollPane.setVisible(false);
+                ArrayList <GlassForShop> glassForShops=(ArrayList)glassForShopRepository.findByNameLikeOrderByNameAsc("%"+findText.getText()+"%");
+                if (glassForShops.size()==1){
+                    //введен конечный продукт
+                    item=glassForShops.get(0);
+                }
+                if (glassForShops.size()==0){
+                    //введен новый продукт
+                    return;
+                }
+                if (glassForShops.size()>1){
+                    editListModel.setList(glassForShops);
+                    selectFromEditList.editList.setModel(editListModel);
+//                    selectFromEditList.editList.repaint();
+                    selectFromEditList.setModal(true);
+                    selectFromEditList.setVisible(true);
+                    if (selectFromEditList.getSelectedItem()==-1){
+                        return;
+                    }
+                    item=glassForShops.get(selectFromEditList.getSelectedItem());
+                }
                 int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice()));
                 dataTable.repaint();
                 dataTable.editCellAt(row, 3);
                 ((JTextField)dataTable.getEditorComponent()).selectAll();
                 dataTable.grabFocus();
-            }
-            
+            }            
         }
+    }//GEN-LAST:event_findTextKeyPressed
+
+    private void findTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextActionPerformed
+
     }//GEN-LAST:event_findTextActionPerformed
 
     private void findTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextKeyTyped
@@ -261,9 +281,9 @@ public class MainFrame extends javax.swing.JFrame {
         }
         if(findString.length()>1){
 
-            editListModel.setList((ArrayList)getNameByPrefix(findString));
+            editListModelForTemplate.setList((ArrayList)getNameByPrefix(findString));
             
-            templateListForChoise.setModel(editListModel);
+            templateListForChoise.setModel(editListModelForTemplate);
             
             templateScrollPane.setBounds(findText.getBounds().x, findText.getBounds().y+findText.getBounds().height,maxLength(itemsForSearch)*5,100);
             templateListForChoise.setBounds(findText.getBounds().x, findText.getBounds().y+findText.getBounds().height,maxLength(itemsForSearch)*5,100);
@@ -322,12 +342,14 @@ public class MainFrame extends javax.swing.JFrame {
     
     private int getMainPartOfMaxPresentBarCodeForGroup(Integer group){
         int num=1;
-        try {
-            List <GlassForShop> barcodes=glassForShopRepository.findByBarcodeLikeOrderByBarcodeDesc(group+"%");
+//        try {
+        List <GlassForShop> barcodes=glassForShopRepository.findByBarcodeLikeOrderByBarcodeDesc(group+"%");
+        if (barcodes.size()>0)
             num=new Integer(barcodes.get(0).getBarcode().substring(group.toString().length(),group.toString().length()+5));
-        }catch(IndexOutOfBoundsException ex){
+/*        }catch(IndexOutOfBoundsException ex){
             ex.printStackTrace();
         }
+*/
         return num;    
         
     }

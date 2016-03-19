@@ -55,7 +55,7 @@ public class MainFormTest {
         LOG.info("*****************Add*****************");
         try{
             String name="8510 Шпильки";
-            LOG.info("getIdGroup start");
+/*            LOG.info("getIdGroup start");
             Method method=MainFrame.class.getDeclaredMethod("getIdGroup", String.class);
             method.setAccessible(true);
             GroupId group=(GroupId)method.invoke(mainFrame,name);
@@ -64,7 +64,8 @@ public class MainFormTest {
             method.setAccessible(true);
             String barcode=(String)method.invoke(mainFrame,name, group.getGroup());
             LOG.info("generateNewBarcode "+barcode);
-            method=MainFrame.class.getDeclaredMethod("getSklad", String.class);
+
+            Method method=MainFrame.class.getDeclaredMethod("getSklad", String.class);
             method.setAccessible(true);
             Sklad sklad =(Sklad) method.invoke(name);
             LOG.info("getSklad "+sklad.getName());
@@ -72,11 +73,13 @@ public class MainFormTest {
             method.setAccessible(true);
             Double cost=((Integer)method.invoke(mainFrame,name)).doubleValue();
             LOG.info("getCostFromName "+cost);
-            method=MainFrame.class.getDeclaredMethod("generateArticle", Integer.class,GroupId.class);
-            method.setAccessible(true);
-            String article=(String)method.invoke(mainFrame, cost.intValue(), group);
-            LOG.info("generateArticle "+article);
-            method=MainFrame.class.getDeclaredMethod("addNewPosition", String.class);
+ //           method=MainFrame.class.getDeclaredMethod("generateArticle", Integer.class,GroupId.class);
+//            method.setAccessible(true);
+//            String article=(String)method.invoke(mainFrame, cost.intValue(), group);
+//            LOG.info("generateArticle "+article);
+*/
+//            Method method=MainFrame.class.getDeclaredMethod("addNewPosition", String.class);
+            Method method=MainFrame.class.getDeclaredMethod("addNewPosition", String.class);
             method.setAccessible(true);
             method.invoke(mainFrame, name);
             LOG.info("Test passed");
