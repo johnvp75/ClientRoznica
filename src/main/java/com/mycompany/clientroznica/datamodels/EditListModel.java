@@ -43,5 +43,10 @@ public class EditListModel extends AbstractListModel{
         return list.get(index).toString();
     }
     
+    public Object getElementAtAsObject(int index) {
+//        LOG.info(list.get(index).toString());
+        return list.get(index);
+    }
+    
     
 }

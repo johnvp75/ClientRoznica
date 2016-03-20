@@ -44,10 +44,14 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.plaf.basic.BasicTreeUI;
+import javax.swing.table.TableCellEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -83,8 +87,7 @@ public class MainFrame extends javax.swing.JFrame {
     @Autowired
     private SelectFromEditList selectFromEditList;
     
-    @Autowired
-    private EditListModel editListModel;
+
 
     @Autowired
     private EditListModel editListModelForTemplate;
@@ -115,10 +118,25 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode()==KeyEvent.VK_ENTER){
-                    findText.setText(templateListForChoise.getSelectedValue().toString());
+                    GlassForShop item=new GlassForShop();
+                    item=(GlassForShop)editListModelForTemplate.getElementAtAsObject(templateListForChoise.getSelectedIndex());
+                    findText.setText(item.toString());
                     templateScrollPane.setVisible(false);
                     templateListForChoise.setVisible(false);
-                    findText.grabFocus();
+                    findText.selectAll();
+                    int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice()));
+                    dataTable.repaint();
+                    dataTable.editCellAt(row, 3);
+//                    JTextField fieldForCount=((JTextField)dataTable.getEditorComponent());
+//                    ((JTextField)dataTable.getEditorComponent()).selectAll();
+                    JTextField fieldForCount=new JTextField();
+                    fieldForCount.selectAll();
+                    DefaultCellEditor cellEditor=new DefaultCellEditor(fieldForCount);
+//                    dataTable.seted
+//                    cellEditor.addCellEditorListener(new Cell);
+                    
+                    dataTable.prepareEditor(new DefaultCellEditor(fieldForCount), row, 3);
+                    dataTable.grabFocus();
                 }
             }
         });
@@ -153,9 +171,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         findLabel = new javax.swing.JLabel();
         findText = new javax.swing.JTextField();
-        newButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        dataTable = new javax.swing.JTable();
+        dataTable = new javax.swing.JTable(){
+            public void editingStopped(ChangeEvent e){
+
+                dataTable.grabFocus();
+            }
+        };
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -166,7 +188,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         findLabel.setText("Найти:");
 
-        findText.setText("Введите строку для поиска");
         findText.setSelectionStart(0);
         findText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -182,8 +203,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        newButton.setText("Добавить");
-
+        dataTable.setModel(tableData);
         jScrollPane1.setViewportView(dataTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -198,9 +218,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(findText, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(newButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(141, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -210,9 +228,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(findLabel)
                     .addComponent(findText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(newButton)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
@@ -221,7 +237,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        dataTable.setModel(tableData);
+//        dataTable.setModel(tableData);
         dataTable.getColumnModel().getColumn(0).setMinWidth(0);
         dataTable.getColumnModel().getColumn(0).setPreferredWidth(4);
         dataTable.getColumnModel().getColumn(1).setPreferredWidth(282);
@@ -425,6 +441,5 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel findLabel;
     private javax.swing.JTextField findText;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton newButton;
     // End of variables declaration//GEN-END:variables
 }
