@@ -10,6 +10,8 @@ package com.mycompany.clientroznica;
 
 import com.mycompany.clientroznica.entity.GlassForShop;
 import com.mycompany.clientroznica.entity.Sklad;
+import com.mycompany.clientroznica.entity.Tovar;
+
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import com.mycompany.clientroznica.repositories.GlassForShopRepository;
 import com.mycompany.clientroznica.repositories.SkladRepository;
+import com.mycompany.clientroznica.repositories.TovarRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -44,8 +47,11 @@ public class RepositoriesTest {
     @Autowired
     private SkladRepository skladRepository;
     
+    @Autowired
+    private TovarRepository tovarRepository;
     
     
+/*    
    @Test
    public void testFindAllGlassForShop() {
        LOG.info("*********All GlassForShop**********");
@@ -57,7 +63,7 @@ public class RepositoriesTest {
    }
    
 
-/*   @Test
+   @Test
    public void testFindAllSklad() {
        LOG.info("*********All Sklad**********");
        Iterable<Sklad> allSklads;
@@ -67,7 +73,7 @@ public class RepositoriesTest {
            LOG.info(sklad.getName());
        }
    }
-*/
+
    @Test
    public void testFindNameLike() {
        LOG.info("*********Barcodes from glassforshop like 2203000**********");
@@ -80,7 +86,19 @@ public class RepositoriesTest {
            LOG.info(element.getName()+" barcodes "+element.getBarcode()+": "+num);
        }
    }
-   
-    // TODO add test methods here. The name must begin with 'test'. For example:
-    // public void testHello() {}
+*/
+    
+ 
+    @Test
+    public void testSaveWithNullId(){
+       LOG.info("*************saveWithNullId Start Test");
+       Tovar tovar=new Tovar("Проба записи", 1);
+       tovarRepository.save(tovar);
+       tovar=tovarRepository.getByNameLike(tovar.getName()+"%");
+
+       LOG.info(tovar.getName());
+
+       LOG.info("*************saveWithNullId End Test");
+       
+    }
 }

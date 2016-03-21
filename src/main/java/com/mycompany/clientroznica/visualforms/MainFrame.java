@@ -58,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import java.sql.Date;
 
 /**
  *
@@ -429,8 +430,10 @@ public class MainFrame extends javax.swing.JFrame {
         if (sklad.getId_skl()==8){
             Tovar tovar =new Tovar(name, 1);
             tovarRepository.save(tovar);
+            tovar=tovarRepository.getByNameLike(tovar.getName()+"%");
             Val val=valRepository.findOne(4);
-            Kart kart = new Kart(tovar, sklad, group, cost, (Date) (new GregorianCalendar()).getTime(), val);
+            Date date=new Date(new GregorianCalendar().getTimeInMillis());
+            Kart kart = new Kart(tovar, sklad, group, cost, date, val);
             kartRepository.save(kart);
             List <Bar_code> barcodes=new ArrayList<Bar_code>(); 
             barcodes.add(new Bar_code(barcode, tovar, sklad, 1, 1));

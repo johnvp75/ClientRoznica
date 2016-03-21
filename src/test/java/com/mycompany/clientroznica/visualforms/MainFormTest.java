@@ -50,7 +50,7 @@ public class MainFormTest {
     public MainFormTest() {
     }
     
-    @Test
+//    @Test
     public void testGenerateNewBarcode(){
         LOG.info("*****************Add*****************");
         try{
