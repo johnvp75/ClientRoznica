@@ -6,9 +6,12 @@ package com.mycompany.clientroznica.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -28,8 +31,10 @@ public class GlassForShop {
         this.price = price;
         this.sklad=sklad;
     }
-    @Id
+    @Id    
     @Column(name="Id")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "my_entity_seq_gen")
+    @SequenceGenerator(name = "my_entity_seq_gen", sequenceName = "GLASSFORSHOP_SEQ")
     private int id ;
     
     @Column(name="name")

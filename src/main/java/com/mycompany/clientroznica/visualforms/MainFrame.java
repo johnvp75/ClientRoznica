@@ -36,6 +36,7 @@ import java.util.AbstractList;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EventObject;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -49,12 +50,14 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.table.TableCellEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -127,15 +130,7 @@ public class MainFrame extends javax.swing.JFrame {
                     int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice()));
                     dataTable.repaint();
                     dataTable.editCellAt(row, 3);
-//                    JTextField fieldForCount=((JTextField)dataTable.getEditorComponent());
-//                    ((JTextField)dataTable.getEditorComponent()).selectAll();
-                    JTextField fieldForCount=new JTextField();
-                    fieldForCount.selectAll();
-                    DefaultCellEditor cellEditor=new DefaultCellEditor(fieldForCount);
-//                    dataTable.seted
-//                    cellEditor.addCellEditorListener(new Cell);
-                    
-                    dataTable.prepareEditor(new DefaultCellEditor(fieldForCount), row, 3);
+                    ((JTextField)dataTable.getEditorComponent()).selectAll();
                     dataTable.grabFocus();
                 }
             }
@@ -150,6 +145,8 @@ public class MainFrame extends javax.swing.JFrame {
         });
         findText.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e){
+                if (e.getOppositeComponent()==null)
+                    return;
                 if(!e.getOppositeComponent().equals(templateListForChoise)){
                     templateScrollPane.setVisible(false);
                     templateListForChoise.setVisible(false);
@@ -188,7 +185,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         findLabel.setText("Найти:");
 
-        findText.setSelectionStart(0);
         findText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 findTextActionPerformed(evt);
@@ -203,8 +199,18 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        dataTable.setModel(tableData);
         jScrollPane1.setViewportView(dataTable);
+        CellEditorListener ChangeNotification = new CellEditorListener() {
+            public void editingCanceled(ChangeEvent e) {
+                findText.grabFocus();
+            }
+
+            public void editingStopped(ChangeEvent e) {
+
+                findText.grabFocus();
+            }
+        };
+        dataTable.getDefaultEditor(String.class).addCellEditorListener(ChangeNotification);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -237,7 +243,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-//        dataTable.setModel(tableData);
+        dataTable.setModel(tableData);
         dataTable.getColumnModel().getColumn(0).setMinWidth(0);
         dataTable.getColumnModel().getColumn(0).setPreferredWidth(4);
         dataTable.getColumnModel().getColumn(1).setPreferredWidth(282);
@@ -262,7 +268,7 @@ public class MainFrame extends javax.swing.JFrame {
                     item=glassForShops.get(0);
                 }
                 if (glassForShops.size()==0){
-                    //введен новый продукт
+                    addNewPosition(findText.getText());
                     return;
                 }
                 if (glassForShops.size()>1){
@@ -299,7 +305,13 @@ public class MainFrame extends javax.swing.JFrame {
         if(findString.length()>1){
 
 //            ((EditListModel)(templateListForChoise.getModel())).setList((ArrayList)getNameByPrefix(findString));
-            editListModelForTemplate.setList((ArrayList)getNameByPrefix(findString));
+            ArrayList namesList=(ArrayList)getNameByPrefix(findString);
+            if (namesList.size()==0){
+                templateScrollPane.setVisible(false);
+                templateListForChoise.setVisible(false);
+                return;
+            }
+            editListModelForTemplate.setList(namesList);
             
             templateListForChoise.setModel(editListModelForTemplate);
             
@@ -402,6 +414,7 @@ public class MainFrame extends javax.swing.JFrame {
         return skladRepository.findOne(99);
     }
     
+    @Transactional
     private void addNewPosition(String name){
         GroupId group=getIdGroup(name);
         String barcode=generateNewBarcode(name, group.getGroup());
