@@ -8,11 +8,11 @@ package com.mycompany.clientroznica.datamodels;
  *
  * @author Евгений
  */
-public class TableRecord {
+public class TableRecord implements Comparable<TableRecord>{
     private String name;
     private String bar_code;
     private int count;
-    private double cost;
+    private Double cost;
 
     public TableRecord(String name, String bar_code, int count, double cost) {
         this.name = name;
@@ -29,11 +29,11 @@ public class TableRecord {
         this.bar_code = bar_code;
     }
 
-    public double getCost() {
+    public Double getCost() {
         return cost;
     }
 
-    public void setCost(double cost) {
+    public void setCost(Double cost) {
         this.cost = cost;
     }
 
@@ -41,7 +41,7 @@ public class TableRecord {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
@@ -53,4 +53,16 @@ public class TableRecord {
         this.name = name;
     }
     
+    public String getCostAsString(){
+        return String.format("%.2f руб.", cost);
+    }
+
+
+    public int compareTo(TableRecord o) {
+        if (this.getName().equals(o.getName())){
+            return this.getCost().compareTo(o.getCost());
+        }else{
+            return this.getName().compareTo(o.getName());
+        }
+    }
 }

@@ -94,10 +94,11 @@ public class RepositoriesTest {
        LOG.info("*************saveWithNullId Start Test");
        Tovar tovar=new Tovar("Проба записи", 1);
        tovarRepository.save(tovar);
+       
+       Tovar tovar1=tovarRepository.getByNameTrim(tovar.getName());
        tovar=tovarRepository.getByNameLike(tovar.getName()+"%");
-
-       LOG.info(tovar.getName());
-
+       LOG.info("tovar:"+tovar.getName());
+       LOG.info("tovar:"+tovar1.getName());
        LOG.info("*************saveWithNullId End Test");
        
     }

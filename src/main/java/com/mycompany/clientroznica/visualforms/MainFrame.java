@@ -31,6 +31,11 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.AbstractList;
 
@@ -59,6 +64,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -132,7 +149,7 @@ public class MainFrame extends javax.swing.JFrame {
                     dataTable.repaint();
                     dataTable.editCellAt(row, 3);
                     ((JTextField)dataTable.getEditorComponent()).selectAll();
-                    dataTable.grabFocus();
+                    dataTable.requestFocus();
                 }
             }
         });
@@ -170,12 +187,8 @@ public class MainFrame extends javax.swing.JFrame {
         findLabel = new javax.swing.JLabel();
         findText = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        dataTable = new javax.swing.JTable(){
-            public void editingStopped(ChangeEvent e){
-
-                dataTable.grabFocus();
-            }
-        };
+        dataTable = new javax.swing.JTable();
+        saveXLSButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -200,43 +213,57 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        dataTable.setNextFocusableComponent(findText);
+        dataTable.setVerifyInputWhenFocusTarget(false);
+        dataTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dataTableKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                dataTableKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                dataTableKeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(dataTable);
-        CellEditorListener ChangeNotification = new CellEditorListener() {
-            public void editingCanceled(ChangeEvent e) {
-                findText.grabFocus();
-            }
 
-            public void editingStopped(ChangeEvent e) {
-
-                findText.grabFocus();
+        saveXLSButton.setText("Записать XLS");
+        saveXLSButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveXLSButtonActionPerformed(evt);
             }
-        };
-        dataTable.getDefaultEditor(String.class).addCellEditorListener(ChangeNotification);
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(findLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(findText, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(141, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(saveXLSButton, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)))
+                .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(63, 63, 63)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(findLabel)
                     .addComponent(findText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveXLSButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -250,7 +277,7 @@ public class MainFrame extends javax.swing.JFrame {
         dataTable.getColumnModel().getColumn(1).setPreferredWidth(282);
         dataTable.getColumnModel().getColumn(3).setPreferredWidth(4);
         dataTable.getColumnModel().getColumn(4).setPreferredWidth(10);
-        
+        findText.requestFocus();
     }//GEN-LAST:event_formWindowOpened
 
     private void findTextKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextKeyPressed
@@ -316,9 +343,9 @@ public class MainFrame extends javax.swing.JFrame {
             
             templateListForChoise.setModel(editListModelForTemplate);
             
-            templateScrollPane.setBounds(findText.getBounds().x, findText.getBounds().y+findText.getBounds().height,maxLength(itemsForSearch)*5,100);
-            templateListForChoise.setBounds(findText.getBounds().x, findText.getBounds().y+findText.getBounds().height,maxLength(itemsForSearch)*5,100);
-            templateListForChoise.setVisibleRowCount(10);
+            templateScrollPane.setBounds(findText.getBounds().x, findText.getBounds().y+findText.getBounds().height,maxLength(itemsForSearch)*10,100);
+//            templateListForChoise.setBounds(findText.getBounds().x, findText.getBounds().y+findText.getBounds().height,maxLength(itemsForSearch)*5,100);
+//            templateListForChoise.setVisibleRowCount(10);
             templateScrollPane.setVisible(true);
             templateListForChoise.setVisible(true);
             
@@ -326,6 +353,48 @@ public class MainFrame extends javax.swing.JFrame {
             repaint();
         }
     }//GEN-LAST:event_findTextKeyTyped
+
+    private void saveXLSButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveXLSButtonActionPerformed
+        try {
+            saveXLSXFile(sortList(((TableData)dataTable.getModel()).getAllrecords()));
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_saveXLSButtonActionPerformed
+
+    private void dataTableKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyTyped
+ 
+    }//GEN-LAST:event_dataTableKeyTyped
+
+    private void dataTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyReleased
+                    // TODO add your handling code here:
+    }//GEN-LAST:event_dataTableKeyReleased
+
+    private List<TableRecord> sortList(List<TableRecord> sortingList){
+        List<TableRecord> sortedList=new ArrayList<TableRecord>();
+        while(sortingList.size()>0){
+            TableRecord tempalateItem=sortingList.get(0);
+            sortingList.remove(0);
+            int i=0;
+            while (sortedList.size()>i&&sortedList.get(i).compareTo(tempalateItem)<0){
+                i++;
+            }
+            sortedList.add(i, tempalateItem);
+        }
+        return sortedList;
+    }
+            
+    private void dataTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyPressed
+       if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+           evt.setKeyCode(evt.VK_UNDEFINED); 
+           TableCellEditor edit=dataTable.getCellEditor();
+                if (edit!=null){
+                    edit.stopCellEditing();
+                }
+            findText.requestFocus();
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dataTableKeyPressed
 
     private List<GlassForShop> getNameByPrefix(String prefix) {
         List<GlassForShop> result=new ArrayList<GlassForShop>();
@@ -428,27 +497,74 @@ public class MainFrame extends javax.swing.JFrame {
         dataTable.editCellAt(row, 3);
         ((JTextField)dataTable.getEditorComponent()).selectAll();
         if (sklad.getId_skl()==8){
-            Tovar tovar =new Tovar(name, 1);
+            Tovar tovar =new Tovar(tovarRepository.getNextId(),name, 1);
             tovarRepository.save(tovar);
-            tovar=tovarRepository.getByNameLike(tovar.getName()+"%");
+            tovar=tovarRepository.getByNameTrim(tovar.getName());
             Val val=valRepository.findOne(4);
             Date date=new Date(new GregorianCalendar().getTimeInMillis());
-            Kart kart = new Kart(tovar, sklad, group, cost, date, val);
+            Kart kart = new Kart(kartRepository.getNextId(),tovar, sklad, group, cost, date, val);
             kartRepository.save(kart);
-            List <Bar_code> barcodes=new ArrayList<Bar_code>(); 
-            barcodes.add(new Bar_code(barcode, tovar, sklad, 1, 1));
-            barcodes.add(new Bar_code(generateArticle(cost.intValue(), group), tovar, sklad, 1, 0));
-            bar_codeRepository.save(barcodes);
+            bar_codeRepository.save(new Bar_code(barcode, tovar, sklad, 1, 1));
+            bar_codeRepository.save(new Bar_code(generateArticle(cost.intValue(), group), tovar, sklad, 1, 0));
             Price price = new Price(tovar, sklad, type_priceRepository.findOne(5), cost, 0, 0);
             priceRepository.save(price);
         }
         
         
-        
         dataTable.grabFocus();
 
     }
-            
+
+    private void saveXLSXFile(List<TableRecord> items) throws IOException {
+        
+        File excel=new File("Export.xlsx");
+        FileOutputStream fos = new FileOutputStream(excel);
+        Workbook myWorkBook = new XSSFWorkbook ();
+        Sheet mySheet = myWorkBook.createSheet();
+        Map<String, Object[]> data = new HashMap<String, Object[]>();
+        Integer i=2;
+        for (TableRecord item:items){
+            data.put(i.toString(), new Object[]{item.getBar_code(),item.getName(),item.getCount(),item.getCost()," "," ",item.getCostAsString()});
+            i++;
+        }
+         Set<String> newRows = data.keySet();
+         int rownum=2;
+         for (String key : newRows) {
+             
+                // Creating a new Row in existing XLSX sheet
+                Row row = mySheet.createRow(rownum++);
+                Object [] objArr = data.get(key);
+                int cellnum = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+         }
+         myWorkBook.write(fos);
+         fos.close();
+   }
+
+    private List<TableRecord> removeNull(List<TableRecord> items){
+        int i=0;
+        while (items.size()>i){
+            if (items.get(i).getCount()<1){
+                items.remove(i);
+            }else{
+                i++;
+            }
+        }
+        return items;
+    }
     /**
      * @param args the command line arguments
      */
@@ -457,5 +573,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel findLabel;
     private javax.swing.JTextField findText;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton saveXLSButton;
     // End of variables declaration//GEN-END:variables
 }

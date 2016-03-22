@@ -9,6 +9,7 @@ package com.mycompany.clientroznica.entity;
 import java.sql.Date;
 import javax.persistence.*;
 import com.mycompany.clientroznica.entity.GroupId;
+import java.util.logging.Logger;
 /**
  *
  * @author User
@@ -29,6 +30,19 @@ public class Kart {
         this.day = day;
         this.val = val;
     }
+
+    public Kart(int id_nom, Tovar tovar, Sklad skl, GroupId group, double cost, Date day, Val val) {
+        this.id_nom = id_nom;
+        this.tovar = tovar;
+        this.skl = skl;
+        this.group = group;
+        this.cost = cost;
+        this.day = day;
+        this.val = val;
+    }
+    
+    
+    
     
     @Id
     @Column(name="id_nom")
@@ -58,7 +72,7 @@ public class Kart {
     
 
     @ManyToOne
-    @JoinColumn(name="id_val")
+    @JoinColumn(name="val")
     private Val val;
     
     @Column(name="state")

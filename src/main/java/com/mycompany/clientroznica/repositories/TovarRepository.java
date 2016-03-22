@@ -20,7 +20,10 @@ public interface TovarRepository extends CrudRepository<Tovar, Integer>{
     
     public Tovar getByNameLike(String likeName);
     
-//    @Query("Insert into Tovar (id_tovar,name,kol) select max(t.id_tovar)+1 as id_tovar, :tovar.name ,:tovar.kol from Tovar t")
-//    public void saveWithNullId(@Param("tovar") Tovar tovar);
+    @Query("Select t from Tovar t where trim(t.name)=:name")
+    public Tovar getByNameTrim(@Param("name")String name);
+    
+    @Query("select max(t.id_tovar)+1 from Tovar t")
+    public int getNextId();
     
 }

@@ -35,6 +35,12 @@ public class Tovar {
         this.kol = kol;
         
     }
+
+    public Tovar(int id_tovar, String name, int kol) {
+        this.id_tovar = id_tovar;
+        this.name = name;
+        this.kol = kol;
+    }
     
     @Id
     @Column(name = "id_tovar")

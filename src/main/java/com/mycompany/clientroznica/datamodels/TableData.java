@@ -69,10 +69,16 @@ public class TableData extends AbstractTableModel{
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if(columnIndex==3){
             TableRecord record=records.get(rowIndex);
-            record.setCount(new Integer((String)aValue));
+            record.setCount((Integer)aValue);
             records.set(rowIndex,(record));
+            fireTableCellUpdated(rowIndex, columnIndex);
         }
     }
+    
+    @Override
+    public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
     
     public int add(TableRecord record){
         records.add(record);
@@ -89,4 +95,7 @@ public class TableData extends AbstractTableModel{
         return index;
     }
     
+    public List<TableRecord> getAllrecords(){
+        return records;
+    }
 }
