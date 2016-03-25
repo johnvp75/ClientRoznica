@@ -27,8 +27,8 @@ public class TableRecordTest {
     
     @Test
     public void testCompare(){
-        TableRecord item1=new TableRecord("Я Проба сортировки", "113568875", 5, 1.25);
-        TableRecord item2=new TableRecord("A Проба сортировки", "116838875", 1, 9.40);
+        TableRecord item1=new TableRecord("Я Проба сортировки", "113568875", 5, 1.25,"02");
+        TableRecord item2=new TableRecord("A Проба сортировки", "116838875", 1, 9.40,"04");
         LOG.info("Проверка сравнения должен быть положительный результат"+item1.compareTo(item2));
         LOG.info("Проверка сравнения должен быть отрицательный результат"+item2.compareTo(item1));
     }

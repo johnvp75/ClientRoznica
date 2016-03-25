@@ -98,4 +98,11 @@ public class TableData extends AbstractTableModel{
     public List<TableRecord> getAllrecords(){
         return records;
     }
+    
+    public void removeAll(){
+        records.clear();
+        fireTableDataChanged();
+    }
+            
 }
+

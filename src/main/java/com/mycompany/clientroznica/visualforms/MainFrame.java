@@ -64,11 +64,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
+import java.util.AbstractSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -145,7 +147,8 @@ public class MainFrame extends javax.swing.JFrame {
                     templateScrollPane.setVisible(false);
                     templateListForChoise.setVisible(false);
                     findText.selectAll();
-                    int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice()));
+                    
+                    int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice(),getIdGroup(item.getName()).getName().substring(0, 2)));
                     dataTable.repaint();
                     dataTable.editCellAt(row, 3);
                     ((JTextField)dataTable.getEditorComponent()).selectAll();
@@ -189,6 +192,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         dataTable = new javax.swing.JTable();
         saveXLSButton = new javax.swing.JButton();
+        clearTableButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -235,6 +239,13 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        clearTableButton.setText("Очистить");
+        clearTableButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearTableButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -249,7 +260,9 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 587, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(saveXLSButton, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(saveXLSButton, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                            .addComponent(clearTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
@@ -262,7 +275,10 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(saveXLSButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(saveXLSButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(clearTableButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -296,7 +312,12 @@ public class MainFrame extends javax.swing.JFrame {
                     item=glassForShops.get(0);
                 }
                 if (glassForShops.size()==0){
-                    addNewPosition(findText.getText());
+                    if (JOptionPane.showConfirmDialog(this,"Ввести новую позицию?", "Новое", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+                        addNewPosition(findText.getText());
+                    }else{
+                        findText.setText("");
+                        findText.requestFocus();
+                    }
                     return;
                 }
                 if (glassForShops.size()>1){
@@ -311,7 +332,7 @@ public class MainFrame extends javax.swing.JFrame {
                     }
                     item=glassForShops.get(selectFromEditList.getSelectedItem());
                 }
-                int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice()));
+                int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice(),getIdGroup(item.getName()).getName().substring(0, 2)));
                 dataTable.repaint();
                 dataTable.editCellAt(row, 3);
                 ((JTextField)dataTable.getEditorComponent()).selectAll();
@@ -356,7 +377,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void saveXLSButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveXLSButtonActionPerformed
         try {
-            saveXLSXFile(sortList(((TableData)dataTable.getModel()).getAllrecords()));
+            saveXLSXFile(sortList(new ArrayList(((TableData)dataTable.getModel()).getAllrecords())));
         } catch (IOException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -376,11 +397,12 @@ public class MainFrame extends javax.swing.JFrame {
             TableRecord tempalateItem=sortingList.get(0);
             sortingList.remove(0);
             int i=0;
-            while (sortedList.size()>i&&sortedList.get(i).compareTo(tempalateItem)<0){
+            while (sortedList.size()>i&&sortedList.get(i).compareTo(tempalateItem)<=0){
                 i++;
             }
             sortedList.add(i, tempalateItem);
         }
+        dataTable.repaint();
         return sortedList;
     }
             
@@ -395,6 +417,10 @@ public class MainFrame extends javax.swing.JFrame {
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_dataTableKeyPressed
+
+    private void clearTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearTableButtonActionPerformed
+        ((TableData)dataTable.getModel()).removeAll();
+    }//GEN-LAST:event_clearTableButtonActionPerformed
 
     private List<GlassForShop> getNameByPrefix(String prefix) {
         List<GlassForShop> result=new ArrayList<GlassForShop>();
@@ -429,13 +455,19 @@ public class MainFrame extends javax.swing.JFrame {
         if (group!=null){
             setBijuterija(true);
         }else{
-            group=new GroupId(2203000);
+            group=new GroupId(2203000,"99 Other");
         
             setBijuterija(false);
             if (name.indexOf("Очки с/з")>-1)
-                group.setGroup(60000);
+                group=new GroupId(60000,"32 Очки");
             if (name.indexOf("Шляпа")>-1)
-                group.setGroup(1392306);
+                group=new GroupId(1392306,"34 Шляпа");
+            if (name.indexOf("Скидка")>-1)
+                group=new GroupId(2203000,"33 Скидка");
+            if (name.indexOf("Скидка Зима")>-1)
+                group=new GroupId(2203000,"35 Скидка");
+
+
         }
         return group;
     }
@@ -492,7 +524,7 @@ public class MainFrame extends javax.swing.JFrame {
         Double cost=getCostFromName(name).doubleValue();
         GlassForShop itemGlassForShop=new GlassForShop(name, barcode, cost, sklad);
         glassForShopRepository.save(itemGlassForShop);
-        int row=((TableData)dataTable.getModel()).add(new TableRecord(itemGlassForShop.getName(),itemGlassForShop.getBarcode(), 1, itemGlassForShop.getPrice()));
+        int row=((TableData)dataTable.getModel()).add(new TableRecord(itemGlassForShop.getName(),itemGlassForShop.getBarcode(), 1, itemGlassForShop.getPrice(),group.getName().substring(0, 2)));
         dataTable.repaint();
         dataTable.editCellAt(row, 3);
         ((JTextField)dataTable.getEditorComponent()).selectAll();
@@ -523,8 +555,9 @@ public class MainFrame extends javax.swing.JFrame {
         Sheet mySheet = myWorkBook.createSheet();
         Map<String, Object[]> data = new HashMap<String, Object[]>();
         Integer i=2;
-        for (TableRecord item:items){
-            data.put(i.toString(), new Object[]{item.getBar_code(),item.getName(),item.getCount(),item.getCost()," "," ",item.getCostAsString()});
+//        Set<String> newRows=new AbstractSet<>
+/*        for (TableRecord item:items){
+            data.put(i.toString(), new Object[]{item.getBar_code(),item.getName(),item.getCount(),item.getCost()," ",item.getInnerGroup(),item.getCostAsString()});
             i++;
         }
          Set<String> newRows = data.keySet();
@@ -550,7 +583,24 @@ public class MainFrame extends javax.swing.JFrame {
                     }
                 }
          }
-         myWorkBook.write(fos);
+*/
+        int rownum=2;
+        for (TableRecord item:items){
+            Row row = mySheet.createRow(rownum++);
+            Cell cell = row.createCell(0);
+            cell.setCellValue(item.getBar_code());
+            cell = row.createCell(1);
+            cell.setCellValue(item.getName());
+            cell = row.createCell(2);
+            cell.setCellValue(item.getCount());
+            cell = row.createCell(3);
+            cell.setCellValue(item.getCost());
+            cell = row.createCell(5);
+            cell.setCellValue(item.getInnerGroup());
+            cell = row.createCell(6);
+            cell.setCellValue(item.getCostAsString());
+        }
+        myWorkBook.write(fos);
          fos.close();
    }
 
@@ -569,6 +619,7 @@ public class MainFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton clearTableButton;
     private javax.swing.JTable dataTable;
     private javax.swing.JLabel findLabel;
     private javax.swing.JTextField findText;

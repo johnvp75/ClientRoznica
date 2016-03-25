@@ -13,6 +13,7 @@ public class TableRecord implements Comparable<TableRecord>{
     private String bar_code;
     private int count;
     private Double cost;
+    private String innerGroup;
 
     public TableRecord(String name, String bar_code, int count, double cost) {
         this.name = name;
@@ -20,6 +21,23 @@ public class TableRecord implements Comparable<TableRecord>{
         this.count = count;
         this.cost = cost;
     }
+
+    public TableRecord(String name, String bar_code, int count, Double cost, String innerGroup) {
+        this.name = name;
+        this.bar_code = bar_code;
+        this.count = count;
+        this.cost = cost;
+        this.innerGroup = innerGroup;
+    }
+
+    public String getInnerGroup() {
+        return innerGroup;
+    }
+
+    public void setInnerGroup(String innerGroup) {
+        this.innerGroup = innerGroup;
+    }
+        
 
     public String getBar_code() {
         return bar_code;
@@ -57,12 +75,26 @@ public class TableRecord implements Comparable<TableRecord>{
         return String.format("%.2f руб.", cost);
     }
 
-
+    private String getNameWithoutCost(){
+        return getName().substring(getName().indexOf(" ")+1);
+    }
+    
+/*
     public int compareTo(TableRecord o) {
-        if (this.getName().equals(o.getName())){
+        if (this.getNameWithoutCost().equals(o.getNameWithoutCost())){
             return this.getCost().compareTo(o.getCost());
         }else{
-            return this.getName().compareTo(o.getName());
+            return this.getNameWithoutCost().compareTo(o.getNameWithoutCost());
         }
     }
+    */
+    
+        public int compareTo(TableRecord o) {
+        if (Integer.decode(this.innerGroup)==Integer.decode(o.innerGroup)){
+            return this.getCost().compareTo(o.getCost());
+        }else{
+            return Integer.decode(this.innerGroup).compareTo(Integer.decode(o.innerGroup));
+        }
+    }
+
 }

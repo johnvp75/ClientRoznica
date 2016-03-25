@@ -8,7 +8,9 @@ package com.mycompany.clientroznica;
 
 
 
+import com.mycompany.clientroznica.datamodels.GroupWithInnerGroup;
 import com.mycompany.clientroznica.entity.GlassForShop;
+import com.mycompany.clientroznica.entity.GroupId;
 import com.mycompany.clientroznica.entity.Sklad;
 import com.mycompany.clientroznica.entity.Tovar;
 
@@ -22,6 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import com.mycompany.clientroznica.repositories.GlassForShopRepository;
+import com.mycompany.clientroznica.repositories.GroupRepository;
 import com.mycompany.clientroznica.repositories.SkladRepository;
 import com.mycompany.clientroznica.repositories.TovarRepository;
 import java.util.ArrayList;
@@ -49,6 +52,9 @@ public class RepositoriesTest {
     
     @Autowired
     private TovarRepository tovarRepository;
+    
+    @Autowired
+    private GroupRepository groupRepository;    
     
     
 /*    
@@ -91,15 +97,15 @@ public class RepositoriesTest {
  
     @Test
     public void testSaveWithNullId(){
-       LOG.info("*************saveWithNullId Start Test");
-       Tovar tovar=new Tovar("Проба записи", 1);
-       tovarRepository.save(tovar);
+       LOG.info("*************newGetGroupId Start Test");
        
-       Tovar tovar1=tovarRepository.getByNameTrim(tovar.getName());
-       tovar=tovarRepository.getByNameLike(tovar.getName()+"%");
-       LOG.info("tovar:"+tovar.getName());
-       LOG.info("tovar:"+tovar1.getName());
-       LOG.info("*************saveWithNullId End Test");
+        GroupId id=groupRepository.getByNameSuffixAndParentgroup("%Детство", 1310000);
+//        GroupWithInnerGroup newId=new GroupWithInnerGroup(id.getGroup(), id.getName());
+                
+       LOG.info(id.getName());
+//        LOG.info(newId.getName());
+//        LOG.info("Inner:"+newId.getInnerGroup());
+       LOG.info("*************newGetGroupId End Test");
        
     }
 }

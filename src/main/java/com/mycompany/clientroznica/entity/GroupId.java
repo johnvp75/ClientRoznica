@@ -25,7 +25,7 @@ public class GroupId {
     public GroupId() {
     }
 
-    public GroupId(String name, int parentgroup, GroupSection section, int ban) {
+    public GroupId(String name, Integer parentgroup, GroupSection section, int ban) {
         this.name = name;
         this.parentgroup = parentgroup;
         this.section = section;
@@ -35,6 +35,13 @@ public class GroupId {
     public GroupId(Integer group) {
         this.group = group;
     }
+
+    public GroupId(Integer group, String name) {
+        this.group = group;
+        this.name = name;
+    }
+    
+    
     
     @Id
     @Column(name="id_group")
@@ -44,7 +51,7 @@ public class GroupId {
     private String name;
     
     @Column(name="parent_group")
-    private int parentgroup;
+    private Integer parentgroup;
     
     @ManyToOne
     @JoinColumn(name="id_section")
@@ -64,7 +71,7 @@ public class GroupId {
         return name;
     }
 
-    public int getParentgroup() {
+    public Integer getParentgroup() {
         return parentgroup;
     }
 
@@ -80,7 +87,7 @@ public class GroupId {
         this.name = name;
     }
 
-    public void setParentgroup(int parentgroup) {
+    public void setParentgroup(Integer parentgroup) {
         this.parentgroup = parentgroup;
     }
 

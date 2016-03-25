@@ -49,6 +49,8 @@ public class GlassForShop {
     @ManyToOne
     @JoinColumn(name="id_skl")
     private Sklad sklad;
+    
+    
 
     public Sklad getSklad() {
         return sklad;
