@@ -31,6 +31,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -141,20 +143,10 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode()==KeyEvent.VK_ENTER){
-                    GlassForShop item=new GlassForShop();
-                    item=(GlassForShop)editListModelForTemplate.getElementAtAsObject(templateListForChoise.getSelectedIndex());
-                    findText.setText(item.toString());
-                    templateScrollPane.setVisible(false);
-                    templateListForChoise.setVisible(false);
-                    findText.selectAll();
-                    
-                    int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice(),getIdGroup(item.getName()).getName().substring(0, 2)));
-                    dataTable.repaint();
-                    dataTable.editCellAt(row, 3);
-                    ((JTextField)dataTable.getEditorComponent()).selectAll();
-                    dataTable.requestFocus();
+                    actionForTemplateListWhereIsChoseen();
                 }
             }
+
         });
         templateListForChoise.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e){
@@ -163,6 +155,16 @@ public class MainFrame extends javax.swing.JFrame {
                     templateListForChoise.setVisible(false);
                 }
             }
+        });
+        templateListForChoise.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount()==2){
+                    actionForTemplateListWhereIsChoseen();
+                }
+            }
+            
         });
         findText.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e){
@@ -615,6 +617,22 @@ public class MainFrame extends javax.swing.JFrame {
         }
         return items;
     }
+
+    private void actionForTemplateListWhereIsChoseen() {
+        GlassForShop item=new GlassForShop();
+        item=(GlassForShop)editListModelForTemplate.getElementAtAsObject(templateListForChoise.getSelectedIndex());
+        findText.setText(item.toString());
+        templateScrollPane.setVisible(false);
+        templateListForChoise.setVisible(false);
+        findText.selectAll();
+        int row=((TableData)dataTable.getModel()).add(new TableRecord(item.getName(),item.getBarcode(), 1, item.getPrice(),getIdGroup(item.getName()).getName().substring(0, 2)));
+        dataTable.repaint();
+        dataTable.editCellAt(row, 3);
+        ((JTextField)dataTable.getEditorComponent()).selectAll();
+        dataTable.requestFocus();
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
